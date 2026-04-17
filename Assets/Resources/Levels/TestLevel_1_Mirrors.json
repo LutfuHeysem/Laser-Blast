@@ -1,0 +1,11 @@
+{
+  "levelName": "Test Level 1: Mirrors",
+  "cols": 6,
+  "rows": 6,
+  "blocks": [
+    { "x": 0, "y": 0, "type": "ArrowRight", "rotation": 0 },
+    { "x": 4, "y": 0, "type": "Mirror_NW_SE", "rotation": 0 },
+    { "x": 4, "y": 4, "type": "Mirror_NE_SW", "rotation": 0 },
+    { "x": 1, "y": 4, "type": "GoalHole", "rotation": 0 }
+  ]
+}
