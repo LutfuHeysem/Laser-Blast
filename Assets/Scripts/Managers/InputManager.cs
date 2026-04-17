@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VectorFlow.Core;
 
 namespace VectorFlow.Managers
@@ -9,9 +10,9 @@ namespace VectorFlow.Managers
         {
             if (GameManager.Instance.CurrentState != GameState.Idle) return;
 
-            if (Input.GetMouseButtonDown(0))
+            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
                 mousePos.z = 0;
                 
                 Vector2Int gridPos = GridManager.Instance.GetGridPosition(mousePos);

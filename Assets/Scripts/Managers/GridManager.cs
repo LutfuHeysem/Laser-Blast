@@ -28,6 +28,9 @@ namespace VectorFlow.Managers
             }
         }
 
+        public GameObject emptyBlockPrefab;
+        public Transform gridParent;
+
         public void InitializeGrid(LevelData levelData)
         {
             logicalGrid = new CellType[levelData.rows, levelData.cols];
@@ -36,6 +39,13 @@ namespace VectorFlow.Managers
                 for (int c = 0; c < levelData.cols; c++)
                 {
                     logicalGrid[r, c] = levelData.GetCell(c, r);
+                    
+                    // Görsel olarak base gridi oluştur
+                    if (emptyBlockPrefab != null)
+                    {
+                        Vector3 spawnPos = GetWorldPosition(new Vector2Int(c, r));
+                        Instantiate(emptyBlockPrefab, spawnPos, Quaternion.identity, gridParent != null ? gridParent : transform);
+                    }
                 }
             }
             Debug.Log($"[GridManager] Initialized {levelData.cols}x{levelData.rows} grid.");
@@ -62,13 +72,18 @@ namespace VectorFlow.Managers
 
         public Vector3 GetWorldPosition(Vector2Int gridPos)
         {
-            return new Vector3(gridPos.x * cellSize, -gridPos.y * cellSize, 0); 
+            float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
+            float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
+            return new Vector3((gridPos.x * cellSize) - offsetX, (-gridPos.y * cellSize) + offsetY, 0); 
         }
 
         public Vector2Int GetGridPosition(Vector3 worldPos)
         {
-            int x = Mathf.RoundToInt(worldPos.x / cellSize);
-            int y = Mathf.RoundToInt(-worldPos.y / cellSize);
+            float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
+            float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
+            
+            int x = Mathf.RoundToInt((worldPos.x + offsetX) / cellSize);
+            int y = Mathf.RoundToInt(-(worldPos.y - offsetY) / cellSize);
             return new Vector2Int(x, y);
         }
     }
