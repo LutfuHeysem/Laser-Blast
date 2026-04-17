@@ -263,4 +263,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaserEmitter
   maxDistance: 50
+  maxBounces: 50
   isActivated: 0

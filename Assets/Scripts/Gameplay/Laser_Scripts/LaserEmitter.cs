@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaserEmitter : MonoBehaviour
 {
     [Header("Lazer Ayarları")]
-    public float maxDistance = 50f; // Lazerin gidebileceği maksimum mesafe
+    public float maxDistance = 50f;
+    public int maxBounces = 50; // Sonsuz döngüleri engellemek için
     public bool isActivated = false; 
     
     private LineRenderer lineRenderer;
@@ -12,14 +14,11 @@ public class LaserEmitter : MonoBehaviour
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 0; // Başlangıçta lazer görünmez
+        lineRenderer.positionCount = 0;
     }
 
-    // Fareyle (veya mobilde parmakla) bu objeye tıklandığında çalışır
     void OnMouseDown()
     {
-        Debug.Log("OKA TIKLANDI!");
-        // Enerji kontrolü vs. eklenebilir, şimdilik sadece bir kere tetiklenmesini sağlıyoruz
         if (!isActivated)
         {
             isActivated = true;
@@ -27,54 +26,58 @@ public class LaserEmitter : MonoBehaviour
         }
     }
 
-    void ShootLaser()
+    public void ShootLaser()
     {
-        // Lazer çizgisinin 2 noktası olacak: Başlangıç ve Bitiş
-        lineRenderer.positionCount = 2;
-        
-        // 1. Nokta: Okun kendi merkezi
-        lineRenderer.SetPosition(0, transform.position);
+        List<Vector3> points = new List<Vector3>();
+        points.Add(transform.position);
 
-        // Oku kendi "Yukarı" (Y ekseni) yönünde ateşliyoruz. 
-        // Okun rotasyonunu çevirdiğinizde lazer de o yöne gider.
-        Vector2 direction = transform.up; 
+        Vector2 currentPos = transform.position;
+        Vector2 currentDir = transform.up;
+        int bounces = 0;
 
-        // Fizik motorundan o yöne doğru görünmez bir ışın (Raycast) fırlatıyoruz
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, maxDistance);
-
-        if (hit.collider != null)
+        while (bounces < maxBounces)
         {
-            // Işın bir şeye ÇARPTI! 
-            // 2. Noktayı (Bitişi) çarptığı yer olarak belirliyoruz.
-            lineRenderer.SetPosition(1, hit.point);
+            // Kendi collider'ımıza çarpmamak için ray'i çok ufak bir miktar ileriden başlatıyoruz
+            RaycastHit2D hit = Physics2D.Raycast(currentPos + currentDir * 0.05f, currentDir, maxDistance);
 
-            // Çarptığımız objeye ne olduğunu anlamak için bir fonksiyon çağırıyoruz
-            HandleHit(hit.collider.gameObject);
-        }
-        else
-        {
-            // Işın hiçbir şeye çarpmadı (Boşluğa gitti)
-            // Lazer sonsuza (maxDistance) uzasın
-            lineRenderer.SetPosition(1, (Vector2)transform.position + (direction * maxDistance));
-        }
-    }
+            if (hit.collider != null)
+            {
+                points.Add(hit.point);
 
-    void HandleHit(GameObject hitObj)
-    {
-        // Çarptığımız objede "TNTBlock" scripti var mı diye bakıyoruz
-        TNTBlock tnt = hitObj.GetComponent<TNTBlock>();
-        if (tnt != null) 
-        {
-            tnt.Explode(); // Varsa patlat!
+                ILaserInteractable interactable = hit.collider.GetComponent<ILaserInteractable>();
+                if (interactable != null)
+                {
+                    Vector2 newDirection;
+                    // Obje ile etkileşime gir. Eğer true dönerse lazer sekmeye/devam etmeye karar verir.
+                    bool shouldContinue = interactable.OnLaserHit(hit.point, currentDir, this, out newDirection);
+                    
+                    if (shouldContinue)
+                    {
+                        currentPos = hit.point;
+                        currentDir = newDirection.normalized;
+                        bounces++;
+                    }
+                    else
+                    {
+                        // Lazer hedefte durdu veya yok oldu
+                        break;
+                    }
+                }
+                else
+                {
+                    // ILaserInteractable olmayan düz bir duvara çarptı, dur.
+                    break;
+                }
+            }
+            else
+            {
+                // Boşluğa gitti, uca kadar çiz ve döngüyü bitir.
+                points.Add(currentPos + currentDir * maxDistance);
+                break;
+            }
         }
 
-        // Çarptığımız objede "GlassBlock" scripti var mı diye bakıyoruz
-        GlassBlock glass = hitObj.GetComponent<GlassBlock>();
-        if (glass != null) 
-        {
-            glass.Shatter(); // Varsa kır!
-        }
-
-        // Çarptığımız obje "Block_Steel" ise hiçbir şey yapma, lazer sadece orada dursun.
+        lineRenderer.positionCount = points.Count;
+        lineRenderer.SetPositions(points.ToArray());
     }
 }

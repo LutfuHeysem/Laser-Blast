@@ -1,24 +1,47 @@
 using UnityEngine;
 
-public class TNTBlock : MonoBehaviour
+namespace VectorFlow.Gameplay.Blocks
 {
-    [Header("Explosion Settings")]
-    public int explosionRadius = 1; // 3x3 alan için yarıçap 1'dir.
-    public GameObject explosionEffectPrefab; // İleride buraya partikül efekti koyacağız.
-
-    // Lazer bu bloğa çarptığında arkadaşının kodu veya Lazer bu fonksiyonu çağıracak
-    public void Explode()
+    [RequireComponent(typeof(BoxCollider2D))]
+    public class TNTBlock : MonoBehaviour, ILaserInteractable
     {
-        Debug.Log(gameObject.name + " PATLADI! BOOOM!");
+        [Tooltip("Patlama yarıçapı")]
+        public float explosionRadius = 1.5f;
 
-        // 1. Eğer bir patlama efekti atadıysak onu sahnede oluştur
-        if (explosionEffectPrefab != null)
+        public bool OnLaserHit(Vector2 hitPoint, Vector2 incomingDirection, LaserEmitter laserEmitter, out Vector2 outgoingDirection)
         {
-            Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
+            outgoingDirection = Vector2.zero;
+            Explode();
+            return false; 
         }
 
-        // 2. Arkadaşının Grid Manager'ına haber verilecek kısım burası olacak.
-        // Şimdilik sadece kendini yok etmesini söylüyoruz:
-        Destroy(gameObject);
+        public void Explode()
+        {
+            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+            
+            foreach (var hitCollider in hitColliders)
+            {
+                if (hitCollider.gameObject == this.gameObject) continue;
+
+                TNTBlock otherTNT = hitCollider.GetComponent<TNTBlock>();
+                if (otherTNT != null)
+                {
+                    otherTNT.Explode();
+                }
+                
+                if (hitCollider.GetComponent<GoalBlock>() == null && hitCollider.GetComponent<LaserEmitter>() == null)
+                {
+                    Destroy(hitCollider.gameObject);
+                }
+            }
+
+            Destroy(gameObject); 
+        }
+        
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, explosionRadius);
+        }
     }
 }

@@ -3,13 +3,12 @@ using UnityEngine;
 namespace VectorFlow.Gameplay.Blocks
 {
     [RequireComponent(typeof(BoxCollider2D))]
-    public class GlassBlock : MonoBehaviour, ILaserInteractable
+    public class SteelBlock : MonoBehaviour, ILaserInteractable
     {
         public bool OnLaserHit(Vector2 hitPoint, Vector2 incomingDirection, LaserEmitter laserEmitter, out Vector2 outgoingDirection)
         {
-            outgoingDirection = incomingDirection;
-            Destroy(gameObject);
-            return true; 
+            outgoingDirection = Vector2.zero;
+            return false; 
         }
     }
 }
