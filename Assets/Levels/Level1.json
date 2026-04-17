@@ -11,7 +11,7 @@
     { "x": 2, "y": 4, "type": "Prisma", "rotation": 0 },
     { "x": 0, "y": 4, "type": "Mirror_Slash", "rotation": 45 },
     { "x": 5, "y": 4, "type": "Mirror_Backslash", "rotation": -45 },
-    { "x": 1, "y": 7, "type": "Arrow", "rotation": 0 },
+    { "x": 1, "y": 7, "type": "Arrow", "rotation": 90 },
     { "x": 4, "y": 7, "type": "Arrow", "rotation": 0 },
     { "x": 3, "y": 5, "type": "Glass", "rotation": 0 }
   ]
