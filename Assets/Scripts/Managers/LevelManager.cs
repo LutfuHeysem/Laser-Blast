@@ -10,14 +10,14 @@ namespace VectorFlow.Managers
         public TextAsset levelJsonFile; 
         
         [Header("Prefab Eşleşmeleri")]
-        public List<BlockMapping> blockMappings;
-
-        [System.Serializable]
-        public struct BlockMapping 
-        {
-            public string typeName; 
-            public GameObject prefab; 
-        }
+        public GameObject prefab_Arrow;
+        public GameObject prefab_TNT;
+        public GameObject prefab_SteelWall;
+        public GameObject prefab_Glass;
+        public GameObject prefab_Prism;
+        public GameObject prefab_Mirror_NE_SW;
+        public GameObject prefab_Mirror_SW_NE;
+        public GameObject prefab_Goal;
 
         void Start() 
         {
@@ -50,13 +50,21 @@ namespace VectorFlow.Managers
         void SpawnBlock(BlockEntry entry) 
         {
             GameObject prefabToSpawn = null;
-            foreach (var map in blockMappings) 
+            
+            // İsimleri manuel girmek yerine direkt koda gömdük.
+            switch (entry.type) 
             {
-                if (map.typeName == entry.type) 
-                {
-                    prefabToSpawn = map.prefab;
+                case "Arrow": prefabToSpawn = prefab_Arrow; break;
+                case "TNT": prefabToSpawn = prefab_TNT; break;
+                case "SteelWall": prefabToSpawn = prefab_SteelWall; break;
+                case "Glass": prefabToSpawn = prefab_Glass; break;
+                case "Prism": prefabToSpawn = prefab_Prism; break;
+                case "Mirror_NE_SW": prefabToSpawn = prefab_Mirror_NE_SW; break;
+                case "Mirror_SW_NE": prefabToSpawn = prefab_Mirror_SW_NE; break;
+                case "Goal": prefabToSpawn = prefab_Goal; break;
+                default: 
+                    Debug.LogWarning("Bilinmeyen blok tipi, prefab atanamadı: " + entry.type); 
                     break;
-                }
             }
 
             if (prefabToSpawn != null) 
