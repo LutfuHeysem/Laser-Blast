@@ -4,7 +4,7 @@
   "rows": 6,
   "blocks": [
     { "x": 2, "y": 0, "type": "Arrow", "rotation": 180 },
-    { "x": 2, "y": 3, "type": "Prisma", "rotation": 90 },
+    { "x": 2, "y": 3, "type": "Prism", "rotation": 90 },
     { "x": 0, "y": 3, "type": "TNT", "rotation": 0 },
     { "x": 5, "y": 3, "type": "Goal", "rotation": 0 }
   ]

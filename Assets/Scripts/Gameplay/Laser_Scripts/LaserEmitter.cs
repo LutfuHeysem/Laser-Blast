@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class LaserEmitter : MonoBehaviour
 {
     [Header("Lazer Ayarları")]
-    public float maxDistance = 50f;
-    public int maxBounces = 50; // Sonsuz döngüleri engellemek için
+    public float maxDistance = 50f; // Lazerin gidebileceği maksimum mesafe
+    public int maxBounces = 50; 
     public bool isActivated = false; 
     
     private LineRenderer lineRenderer;
@@ -14,7 +14,7 @@ public class LaserEmitter : MonoBehaviour
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 0;
+        lineRenderer.positionCount = 0; // Başlangıçta lazer görünmez
     }
 
     void OnMouseDown()
@@ -35,47 +35,58 @@ public class LaserEmitter : MonoBehaviour
         Vector2 currentDir = transform.up;
         int bounces = 0;
 
+        // Lazerin kendi collider'ına (Arrow'a) çarpmasını geçici olarak engelliyoruz
+        Collider2D myCollider = GetComponent<Collider2D>();
+        if (myCollider != null) myCollider.enabled = false;
+
         while (bounces < maxBounces)
         {
-            // Kendi collider'ımıza çarpmamak için ray'i çok ufak bir miktar ileriden başlatıyoruz
-            RaycastHit2D hit = Physics2D.Raycast(currentPos + currentDir * 0.05f, currentDir, maxDistance);
+            // Sizin eski scriptinizdeki gibi temiz ve basit bir Raycast atıyoruz
+            RaycastHit2D hit = Physics2D.Raycast(currentPos, currentDir, maxDistance);
 
             if (hit.collider != null)
             {
+                // Işın bir şeye ÇARPTI!
                 points.Add(hit.point);
 
+                // Çarptığı obje yeni sistemdeki ILaserInteractable arayüzüne sahip mi?
                 ILaserInteractable interactable = hit.collider.GetComponent<ILaserInteractable>();
                 if (interactable != null)
                 {
                     Vector2 newDirection;
-                    // Obje ile etkileşime gir. Eğer true dönerse lazer sekmeye/devam etmeye karar verir.
+                    // Objeye ne yapması gerektiğini sor (Ayna ise yansıtacak, çelik ise durduracak vs.)
                     bool shouldContinue = interactable.OnLaserHit(hit.point, currentDir, this, out newDirection);
                     
                     if (shouldContinue)
                     {
-                        currentPos = hit.point;
+                        // Ayna gibi seken objelerde, bir sonraki ışının tekrar aynı aynaya çarpıp 
+                        // içine hapsolmasını engellemek için başlangıç noktasını yeni yönde "çok çok az" ileri itiyoruz (0.01f)
+                        currentPos = hit.point + (newDirection.normalized * 0.01f);
                         currentDir = newDirection.normalized;
                         bounces++;
                     }
                     else
                     {
-                        // Lazer hedefte durdu veya yok oldu
+                        // Işın hedefe ulaştı, çeliğe çarptı veya TNT patlattı, devam etmeyecek.
                         break;
                     }
                 }
                 else
                 {
-                    // ILaserInteractable olmayan düz bir duvara çarptı, dur.
+                    // ILaserInteractable olmayan düz bir objeye çarptı, dur.
                     break;
                 }
             }
             else
             {
-                // Boşluğa gitti, uca kadar çiz ve döngüyü bitir.
+                // Işın hiçbir şeye çarpmadı (Boşluğa gitti)
                 points.Add(currentPos + currentDir * maxDistance);
                 break;
             }
         }
+
+        // Kendi collider'ımızı geri açıyoruz
+        if (myCollider != null) myCollider.enabled = true;
 
         lineRenderer.positionCount = points.Count;
         lineRenderer.SetPositions(points.ToArray());

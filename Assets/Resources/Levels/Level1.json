@@ -3,16 +3,71 @@
   "cols": 6,
   "rows": 8,
   "blocks": [
-    { "x": 2, "y": 0, "type": "Goal", "rotation": 0 },
-    { "x": 1, "y": 1, "type": "SteelWall", "rotation": 0 },
-    { "x": 2, "y": 1, "type": "SteelWall", "rotation": 0 },
-    { "x": 3, "y": 1, "type": "SteelWall", "rotation": 0 },
-    { "x": 1, "y": 2, "type": "TNT", "rotation": 0 },
-    { "x": 2, "y": 4, "type": "Prisma", "rotation": 0 },
-    { "x": 0, "y": 4, "type": "Mirror_Slash", "rotation": 45 },
-    { "x": 5, "y": 4, "type": "Mirror_Backslash", "rotation": -45 },
-    { "x": 1, "y": 7, "type": "Arrow", "rotation": 90 },
-    { "x": 4, "y": 7, "type": "Arrow", "rotation": 0 },
-    { "x": 3, "y": 5, "type": "Glass", "rotation": 0 }
+    {
+      "x": 2,
+      "y": 0,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "type": "TNT",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "type": "Prism",
+      "rotation": 0
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "type": "Mirror_NE_SW",
+      "rotation": 45
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "Mirror_SW_NE",
+      "rotation": -45
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "type": "Arrow",
+      "rotation": 90
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "type": "Glass",
+      "rotation": 0
+    }
   ]
 }

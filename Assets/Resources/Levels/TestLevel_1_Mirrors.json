@@ -4,8 +4,8 @@
   "rows": 6,
   "blocks": [
     { "x": 0, "y": 0, "type": "Arrow", "rotation": -90 },
-    { "x": 4, "y": 0, "type": "Mirror_Backslash", "rotation": 0 },
-    { "x": 4, "y": 4, "type": "Mirror_Slash", "rotation": 0 },
+    { "x": 4, "y": 0, "type": "Mirror_SW_NE", "rotation": 0 },
+    { "x": 4, "y": 4, "type": "Mirror_NE_SW", "rotation": 0 },
     { "x": 1, "y": 4, "type": "Goal", "rotation": 0 }
   ]
 }
