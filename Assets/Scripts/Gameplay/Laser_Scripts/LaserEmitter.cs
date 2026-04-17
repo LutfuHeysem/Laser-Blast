@@ -11,10 +11,15 @@ public class LaserEmitter : MonoBehaviour
     
     private LineRenderer lineRenderer;
 
-    void Start()
+    private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 0; // Başlangıçta lazer görünmez
+    }
+
+    void Start()
+    {
+        if (lineRenderer != null && !isActivated)
+            lineRenderer.positionCount = 0; // Eğer sonradan yaratılıp aktive edildiyse silme!
     }
 
     void OnMouseDown()
@@ -26,7 +31,7 @@ public class LaserEmitter : MonoBehaviour
         }
     }
 
-    public void ShootLaser()
+    public void ShootLaser(Collider2D ignoreCollider = null)
     {
         List<Vector3> points = new List<Vector3>();
         points.Add(transform.position);
@@ -35,9 +40,10 @@ public class LaserEmitter : MonoBehaviour
         Vector2 currentDir = transform.up;
         int bounces = 0;
 
-        // Lazerin kendi collider'ına (Arrow'a) çarpmasını geçici olarak engelliyoruz
+        // Lazerin kendi collider'ına (Arrow'a) ve doğduğu prizmaya çarpmasını geçici olarak engelliyoruz
         Collider2D myCollider = GetComponent<Collider2D>();
         if (myCollider != null) myCollider.enabled = false;
+        if (ignoreCollider != null) ignoreCollider.enabled = false;
 
         while (bounces < maxBounces)
         {
@@ -85,7 +91,8 @@ public class LaserEmitter : MonoBehaviour
             }
         }
 
-        // Kendi collider'ımızı geri açıyoruz
+        // Kapatılan collider'ları geri açıyoruz
+        if (ignoreCollider != null) ignoreCollider.enabled = true;
         if (myCollider != null) myCollider.enabled = true;
 
         lineRenderer.positionCount = points.Count;
