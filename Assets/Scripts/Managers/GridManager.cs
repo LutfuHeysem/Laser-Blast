@@ -14,25 +14,21 @@ namespace VectorFlow.Managers
 
         private CellType[,] logicalGrid;
 
+        public GameObject emptyBlockPrefab;
+        public Transform gridParent;
+
         private void Awake()
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }
 
-        private void Start()
-        {
-            if (currentLevel != null)
-            {
-                InitializeGrid(currentLevel);
-            }
-        }
-
-        public GameObject emptyBlockPrefab;
-        public Transform gridParent;
+        // Start() içindeki yüklemeyi sildik çünkü artık işlemi LevelManager tetikliyor.
 
         public void InitializeGrid(LevelData levelData)
         {
+            currentLevel = levelData; // HAYAT KURTARAN DÜZELTME: Bu satır olmadan GetWorldPosition çöker!
+            
             logicalGrid = new CellType[levelData.rows, levelData.cols];
             for (int r = 0; r < levelData.rows; r++)
             {
@@ -53,7 +49,7 @@ namespace VectorFlow.Managers
 
         public CellType GetCellType(Vector2Int gridPos)
         {
-            if (!IsValidPosition(gridPos)) return CellType.SteelWall; // Out of bounds acts like wall
+            if (!IsValidPosition(gridPos)) return default(CellType); 
             return logicalGrid[gridPos.y, gridPos.x];
         }
 

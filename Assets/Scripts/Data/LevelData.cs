@@ -1,35 +1,45 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-using VectorFlow.Core;
+using VectorFlow.Core; // Arkadaşının CellType enum'ını okumak için
 
 namespace VectorFlow.Data
 {
-    [System.Serializable]
-    public class CellData
+    [Serializable]
+    public class BlockEntry
     {
-        public CellType type;
+        public int x;
+        public int y;
+        public string type;
+        public float rotation;
     }
 
-    [CreateAssetMenu(fileName = "New Level", menuName = "VectorFlow/Level Data")]
-    public class LevelData : ScriptableObject
+    [Serializable]
+    public class LevelData
     {
         public string levelName;
-        public int startingEnergy = 1;
-        public int rows = 8;
-        public int cols = 6;
-        
-        // Flattened 2D array representation for Inspector mapping
-        public CellType[] gridCells = new CellType[48]; 
+        public int cols;
+        public int rows;
+        public List<BlockEntry> blocks;
 
+        // GridManager'ın çağırdığı, "Bu x ve y'de ne var?" sorusuna cevap veren fonksiyon
         public CellType GetCell(int x, int y)
         {
-            if (x < 0 || x >= cols || y < 0 || y >= rows) return CellType.SteelWall;
-            return gridCells[y * cols + x];
-        }
+            if (blocks == null) return default(CellType);
 
-        public void SetCell(int x, int y, CellType type)
-        {
-            if (x < 0 || x >= cols || y < 0 || y >= rows) return;
-            gridCells[y * cols + x] = type;
+            foreach (var block in blocks)
+            {
+                if (block.x == x && block.y == y)
+                {
+                    // JSON'daki yazıyı (örn: "TNT") arkadaşının CellType enum'ına çevirir
+                    if (Enum.TryParse(block.type, true, out CellType cellType))
+                    {
+                        return cellType;
+                    }
+                }
+            }
+            
+            return default(CellType); 
         }
     }
 }

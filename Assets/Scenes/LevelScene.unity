@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 1144914122}
   - component: {fileID: 1144914121}
   - component: {fileID: 1144914120}
+  - component: {fileID: 1144914125}
   m_Layer: 0
   m_Name: '[MANAGERS]'
   m_TagString: Untagged
@@ -300,7 +301,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31e5c5ec5fab4498be000b6b4e9fda1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.GridManager
-  currentLevel: {fileID: 11400000, guid: 67495bb7b270f4eb1a3e660378315309, type: 2}
+  currentLevel:
+    levelName: 
+    cols: 0
+    rows: 0
+    blocks: []
   cellSize: 1
   emptyBlockPrefab: {fileID: 6177534166135164744, guid: 50a2af6ed53ca4ef3944a1cf6997b910, type: 3}
   gridParent: {fileID: 1613446892}
@@ -344,6 +349,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1144914125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144914119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a51d0c62cc9e4ead8bca50be43b2698, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelManager
+  levelJsonFile: {fileID: 4900000, guid: 30ea5ebb74d6d489895b41f7f51ee1e1, type: 3}
+  blockMappings:
+  - typeName: Arrow
+    prefab: {fileID: 7092260019878427188, guid: da59d5c70d3cb47c0845e15bdfb1c09e, type: 3}
+  - typeName: TNT
+    prefab: {fileID: 7231259743185156324, guid: 96be2cdae0205487c9b1e577735e5fd3, type: 3}
+  - typeName: SteelWall
+    prefab: {fileID: 360161772971020719, guid: 9c90a6fec8ba340e0a857e99f22e7502, type: 3}
+  - typeName: Glass
+    prefab: {fileID: 2381775594693063565, guid: 4797da69bee9945e8aecf6c8eef611c8, type: 3}
 --- !u!1 &1613446891
 GameObject:
   m_ObjectHideFlags: 0
