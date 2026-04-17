@@ -63,10 +63,15 @@ namespace VectorFlow.Managers
             }
         }
 
+        private List<Beam> pendingBeams = new List<Beam>();
+
+        public void AddPendingBeam(Beam beam)
+        {
+            pendingBeams.Add(beam);
+        }
+
         private void StepBeams()
         {
-            List<Beam> newBeams = new List<Beam>();
-
             foreach(var beam in activeBeams)
             {
                 if (!beam.active) continue;
@@ -80,79 +85,16 @@ namespace VectorFlow.Managers
                 }
 
                 CellType cell = GridManager.Instance.GetCellType(beam.pos);
-
-                if (cell == CellType.Empty)
-                {
-                    // Continue
-                }
-                else if (cell == CellType.SteelWall)
-                {
-                    beam.active = false;
-                }
-                else if (cell == CellType.GlassWall)
-                {
-                    GridManager.Instance.SetCellType(beam.pos, CellType.Empty);
-                }
-                else if (cell >= CellType.ArrowUp && cell <= CellType.ArrowLeft)
-                {
-                    SpawnBeamFromArrow(beam.pos, cell);
-                    beam.active = false;
-                }
-                else if (cell == CellType.Mirror_NW_SE) // \
-                {
-                    int tmp = beam.dir.x;
-                    beam.dir.x = beam.dir.y;
-                    beam.dir.y = tmp;
-                }
-                else if (cell == CellType.Mirror_NE_SW) // /
-                {
-                    int tmp = beam.dir.x;
-                    beam.dir.x = -beam.dir.y;
-                    beam.dir.y = -tmp;
-                }
-                else if (cell == CellType.Prism_H)
-                {
-                    beam.active = false;
-                    newBeams.Add(new Beam { pos = beam.pos, dir = new Vector2Int(-1,0), active=true });
-                    newBeams.Add(new Beam { pos = beam.pos, dir = new Vector2Int(1,0), active=true });
-                }
-                else if (cell == CellType.Prism_V)
-                {
-                    beam.active = false;
-                    newBeams.Add(new Beam { pos = beam.pos, dir = new Vector2Int(0,-1), active=true });
-                    newBeams.Add(new Beam { pos = beam.pos, dir = new Vector2Int(0,1), active=true });
-                }
-                else if (cell == CellType.TNT)
-                {
-                    beam.active = false;
-                    ExplodeTNT(beam.pos);
-                }
-                else if (cell == CellType.GoalHole)
-                {
-                    beam.active = false;
-                    GameManager.Instance.ChangeState(GameState.Won);
-                }
+                
+                // Use Strategy Pattern via Registry
+                var behavior = Gameplay.BlockRegistry.GetBehavior(cell);
+                behavior.OnBeamHit(beam);
             }
 
-            activeBeams.AddRange(newBeams);
-        }
-
-        private void ExplodeTNT(Vector2Int center)
-        {
-            for (int y = -1; y <= 1; y++)
+            if (pendingBeams.Count > 0)
             {
-                for (int x = -1; x <= 1; x++)
-                {
-                    Vector2Int target = new Vector2Int(center.x + x, center.y + y);
-                    if (GridManager.Instance.IsValidPosition(target))
-                    {
-                        CellType t = GridManager.Instance.GetCellType(target);
-                        if (t != CellType.Empty && t != CellType.GoalHole)
-                        {
-                            GridManager.Instance.SetCellType(target, CellType.Empty);
-                        }
-                    }
-                }
+                activeBeams.AddRange(pendingBeams);
+                pendingBeams.Clear();
             }
         }
     }
