@@ -11,6 +11,10 @@ namespace VectorFlow.Gameplay.Blocks
             
             if (hit.collider != null)
             {
+                if (VectorFlow.Managers.ScoreManager.Instance != null)
+                {
+                    VectorFlow.Managers.ScoreManager.Instance.AddScore(10); // Aynadan sektirme bonusu
+                }
                 outgoingDirection = Vector2.Reflect(incomingDirection, hit.normal);
                 return true; 
             }

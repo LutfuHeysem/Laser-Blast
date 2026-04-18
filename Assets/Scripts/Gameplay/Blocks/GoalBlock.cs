@@ -10,10 +10,9 @@ namespace VectorFlow.Gameplay.Blocks
         {
             outgoingDirection = Vector2.zero;
             
-            if (GameManager.Instance != null)
+            if (VectorFlow.Managers.GameManager.Instance != null)
             {
-                GameManager.Instance.ChangeState(Core.GameState.Won);
-                Debug.Log("LEVEL TAMAMLANDI!");
+                VectorFlow.Managers.GameManager.Instance.WinLevel();
             }
             
             return false; 

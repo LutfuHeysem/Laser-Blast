@@ -2,6 +2,7 @@
   "levelName": "Prizma Labirenti",
   "cols": 6,
   "rows": 8,
+  "startingEnergy": 3,
   "blocks": [
     {
       "x": 2,

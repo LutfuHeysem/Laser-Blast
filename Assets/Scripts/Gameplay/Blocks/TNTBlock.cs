@@ -19,6 +19,11 @@ namespace VectorFlow.Gameplay.Blocks
         {
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
             
+            if (VectorFlow.Managers.ScoreManager.Instance != null)
+            {
+                VectorFlow.Managers.ScoreManager.Instance.AddScore(150); // TNT Patlama Puanı
+            }
+
             foreach (var hitCollider in hitColliders)
             {
                 if (hitCollider.gameObject == this.gameObject) continue;
@@ -31,6 +36,10 @@ namespace VectorFlow.Gameplay.Blocks
                 
                 if (hitCollider.GetComponent<GoalBlock>() == null && hitCollider.GetComponent<LaserEmitter>() == null)
                 {
+                    if (VectorFlow.Managers.ScoreManager.Instance != null && hitCollider.GetComponent<TNTBlock>() == null)
+                    {
+                        VectorFlow.Managers.ScoreManager.Instance.AddScore(50); // Etraftaki objeleri yok etme bonusu
+                    }
                     Destroy(hitCollider.gameObject);
                 }
             }

@@ -34,6 +34,21 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
     {
         if (!isActivated)
         {
+            if (VectorFlow.Managers.GameManager.Instance != null)
+            {
+                // Enerji tüketmeye çalış, yeterli enerji yoksa ateşleme
+                if (!VectorFlow.Managers.GameManager.Instance.TryConsumeEnergy())
+                {
+                    return;
+                }
+            }
+
+            // Oyuncu kendi eliyle sıktığında komboyu sıfırlıyoruz.
+            if (VectorFlow.Managers.ScoreManager.Instance != null)
+            {
+                VectorFlow.Managers.ScoreManager.Instance.ResetCombo();
+            }
+
             isActivated = true;
             if (laserCoroutine != null) StopCoroutine(laserCoroutine);
             laserCoroutine = StartCoroutine(AnimateLaser());
@@ -47,6 +62,14 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         // Eğer başka bir lazer bize çarparsa ve biz henüz ateşlenmemişsek, zincirleme ateş (chain) başlasın!
         if (!isActivated)
         {
+            // Zincirleme ateşleme olduğu için komboyu arttır!
+            if (VectorFlow.Managers.ScoreManager.Instance != null)
+            {
+                VectorFlow.Managers.ScoreManager.Instance.IncrementCombo();
+                // Zincirleme tetiklendiğinde ufak bir puan
+                VectorFlow.Managers.ScoreManager.Instance.AddScore(50);
+            }
+
             isActivated = true;
             if (laserCoroutine != null) StopCoroutine(laserCoroutine);
             laserCoroutine = StartCoroutine(AnimateLaser());
@@ -72,6 +95,11 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
 
     IEnumerator AnimateLaser(Collider2D ignoreCollider = null)
     {
+        if (VectorFlow.Managers.GameManager.Instance != null)
+        {
+            VectorFlow.Managers.GameManager.Instance.RegisterActiveLaser(this);
+        }
+
         ClearLaser();
 
         Vector2 currentPos = startingPoint != null ? (Vector2)startingPoint.position : (Vector2)transform.position;
@@ -196,6 +224,11 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
 
         // Ekranda kalan o lazer parçasını tamamen yok et
         ClearLaser();
+
+        if (VectorFlow.Managers.GameManager.Instance != null)
+        {
+            VectorFlow.Managers.GameManager.Instance.UnregisterActiveLaser(this);
+        }
     }
 
     private GameObject CreateSpriteObject(string objName, Sprite sprite, Vector3 pos, Vector3 dir, bool isBody)

@@ -39,7 +39,19 @@ namespace VectorFlow.Managers
                     GridManager.Instance.InitializeGrid(data);
                 }
 
-                // 2. Sonra senin Prefablari diziyoruz
+                // 2. GameManager'ı enerjisiyle başlat
+                if (VectorFlow.Managers.GameManager.Instance != null)
+                {
+                    VectorFlow.Managers.GameManager.Instance.InitializeGame(data.startingEnergy);
+                }
+
+                // 3. ScoreManager'ı sıfırla
+                if (VectorFlow.Managers.ScoreManager.Instance != null)
+                {
+                    VectorFlow.Managers.ScoreManager.Instance.InitializeScore();
+                }
+
+                // 4. Sonra senin Prefablari diziyoruz
                 foreach (var entry in data.blocks) 
                 {
                     SpawnBlock(entry);
