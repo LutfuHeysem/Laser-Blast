@@ -1,7 +1,6 @@
 using UnityEngine;
 using VectorFlow.Core;
 using VectorFlow.Data;
-using System.Collections.Generic;
 
 namespace VectorFlow.Managers
 {
@@ -9,17 +8,21 @@ namespace VectorFlow.Managers
     {
         public static GridManager Instance { get; private set; }
 
+        [Header("Grid Ayarları")]
         public LevelData currentLevel;
-        public float cellSize = 1f;
+        
+        [Header("İkili Çapa (Dual Anchor) Sistemi")]
+        [Tooltip("Arka plan resmindeki EN SOL ÜST karenin tam merkezi")]
+        public Transform topLeftAnchor; 
+        [Tooltip("Arka plan resmindeki EN SAĞ ALT karenin tam merkezi")]
+        public Transform bottomRightAnchor;
 
-        private CellType[,] logicalGrid;
-
-        public GameObject emptyBlockPrefab;
+        [Header("Görsel (Opsiyonel)")]
+        [Tooltip("Hizalama testi yapmak için boş kare atayabilirsiniz. İşim bitince boş bırakın.")]
+        public GameObject emptyBlockPrefab; 
         public Transform gridParent;
 
-        [Header("Görsel Ayarlar")]
-        public GameObject blackGlassPrefab;
-        public float glassPadding = 0.2f;
+        private CellType[,] logicalGrid;
 
         private void Awake()
         {
@@ -32,6 +35,12 @@ namespace VectorFlow.Managers
             currentLevel = levelData; 
             logicalGrid = new CellType[levelData.rows, levelData.cols];
             
+            if (topLeftAnchor == null || bottomRightAnchor == null)
+            {
+                Debug.LogError("[GridManager] Çapa noktaları eksik! Lütfen Inspector'dan TopLeft ve BottomRight atamalarını yapın.");
+                return;
+            }
+
             for (int r = 0; r < levelData.rows; r++)
             {
                 for (int c = 0; c < levelData.cols; c++)
@@ -40,69 +49,94 @@ namespace VectorFlow.Managers
                     
                     if (emptyBlockPrefab != null)
                     {
-                        // Z değerini 0.1f yaparak arka planı objelerin biraz gerisine itiyoruz
                         Vector3 spawnPos = GetWorldPosition(new Vector2Int(c, r));
+                        // Test kutuları TNT/Ok objelerinin arkasında kalsın diye Z eksenini 0.1f yapıyoruz
                         spawnPos.z = 0.1f; 
-
                         Instantiate(emptyBlockPrefab, spawnPos, Quaternion.identity, gridParent != null ? gridParent : transform);
                     }
                 }
             }
             
-            // Arka planları oluştur ve kamerayı ayarla
-            CreateBlackGlassBackground();
-            FitCameraToGrid(levelData.cols, levelData.rows, 0.5f, 2.0f);
-            
-            Debug.Log($"[GridManager] Grid {levelData.cols}x{levelData.rows} boyutunda kuruldu.");
+            FitCameraToGrid();
+            Debug.Log($"[GridManager] Çift Anchor'lı Grid {levelData.cols}x{levelData.rows} başarıyla kuruldu.");
         }
 
-        private void CreateBlackGlassBackground()
-        {
-            if (blackGlassPrefab == null) return;
-
-            float totalWidth = (currentLevel.cols * cellSize) + glassPadding;
-            float totalHeight = (currentLevel.rows * cellSize) + glassPadding;
-
-            // En arkada durması için Z'yi 0.5f yapıyoruz
-            Vector3 glassPosition = new Vector3(0, 0, 0.5f);
-            GameObject glass = Instantiate(blackGlassPrefab, glassPosition, Quaternion.identity, transform);
-
-            glass.transform.localScale = new Vector3(totalWidth, totalHeight, 1f);
-            glass.name = "Background_BlackGlass";
-            
-            // Kodla da Order in Layer'ı garantiye alalım (isteğe bağlı)
-            var sr = glass.GetComponent<SpriteRenderer>();
-            if(sr != null) sr.sortingOrder = -10;
-        }
-
+        // --- İKİ NOKTA ARASINI KUSURSUZ BÖLEN MATEMATİK ---
         public Vector3 GetWorldPosition(Vector2Int gridPos)
         {
-            float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
-            float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
-            // Gameplay objeleri tam 0 noktasında oluşur
-            return new Vector3((gridPos.x * cellSize) - offsetX, (-gridPos.y * cellSize) + offsetY, 0);
+            if (topLeftAnchor == null || bottomRightAnchor == null) return Vector3.zero;
+
+            // X ekseninde yüzde kaçıncı sıradayız? (0 ile 1 arası bir değer)
+            float percentX = (float)gridPos.x / (currentLevel.cols - 1);
+            
+            // Y ekseninde yüzde kaçıncı sıradayız? (0 ile 1 arası bir değer)
+            float percentY = (float)gridPos.y / (currentLevel.rows - 1);
+
+            // Lerp (Linear Interpolation) ile o yüzdeye denk gelen tam koordinatı bul
+            float xPos = Mathf.Lerp(topLeftAnchor.position.x, bottomRightAnchor.position.x, percentX);
+            float yPos = Mathf.Lerp(topLeftAnchor.position.y, bottomRightAnchor.position.y, percentY);
+
+            // Oyun objeleri önde dursun diye Z'yi 0 yapıyoruz
+            return new Vector3(xPos, yPos, 0);
         }
 
-        // --- DİĞER FONKSİYONLAR (Aynı Kalıyor) ---
+        // Fare tıklamaları için tersine hesaplama (Hangi hücreye tıklandı?)
+        public Vector2Int GetGridPosition(Vector3 worldPos)
+        {
+            if (topLeftAnchor == null || bottomRightAnchor == null) return Vector2Int.zero;
+
+            // Tıklanan yerin iki nokta arasında yüzde kaça denk geldiğini bul
+            float percentX = Mathf.InverseLerp(topLeftAnchor.position.x, bottomRightAnchor.position.x, worldPos.x);
+            float percentY = Mathf.InverseLerp(topLeftAnchor.position.y, bottomRightAnchor.position.y, worldPos.y);
+
+            // Bu yüzdeyi sütun ve satır sayısıyla çarparak tam indeksi (0, 1, 2...) bul
+            int x = Mathf.RoundToInt(percentX * (currentLevel.cols - 1));
+            int y = Mathf.RoundToInt(percentY * (currentLevel.rows - 1));
+
+            return new Vector2Int(x, y);
+        }
+
+        // Kamerayı her zaman o iki noktanın tam ortasına odaklar
+        public void FitCameraToGrid()
+        {
+            Camera mainCam = Camera.main;
+            if (mainCam == null || topLeftAnchor == null || bottomRightAnchor == null) return;
+            
+            // İki noktanın tam ortasını (merkez) bul
+            float centerX = (topLeftAnchor.position.x + bottomRightAnchor.position.x) / 2f;
+            float centerY = (topLeftAnchor.position.y + bottomRightAnchor.position.y) / 2f;
+
+            mainCam.transform.position = new Vector3(centerX, centerY, -10f);
+            
+            // Genişlik ve yüksekliği iki nokta arasındaki mesafeden al
+            float width = Mathf.Abs(bottomRightAnchor.position.x - topLeftAnchor.position.x) + 2f;
+            float height = Mathf.Abs(topLeftAnchor.position.y - bottomRightAnchor.position.y) + 3f;
+
+            float screenRatio = (float)Screen.width / (float)Screen.height;
+            float targetRatio = width / height;
+
+            // Sığdırma işlemi
+            if (screenRatio >= targetRatio) mainCam.orthographicSize = height / 2f;
+            else mainCam.orthographicSize = (height / 2f) * (targetRatio / screenRatio);
+        }
+
+        public CellType GetCellType(Vector2Int gridPos)
+        {
+            if (!IsValidPosition(gridPos)) return default(CellType);
+            return logicalGrid[gridPos.y, gridPos.x];
+        }
+
+        public void SetCellType(Vector2Int gridPos, CellType newType)
+        {
+            if (!IsValidPosition(gridPos)) return;
+            logicalGrid[gridPos.y, gridPos.x] = newType;
+        }
+
         public bool IsValidPosition(Vector2Int gridPos)
         {
             if (logicalGrid == null) return false;
             return gridPos.x >= 0 && gridPos.x < logicalGrid.GetLength(1) &&
                    gridPos.y >= 0 && gridPos.y < logicalGrid.GetLength(0);
-        }
-
-        public void FitCameraToGrid(int cols, int rows, float paddingX = 0.5f, float paddingY = 2.0f)
-        {
-            Camera mainCam = Camera.main;
-            if (mainCam == null) return;
-            mainCam.transform.position = new Vector3(0, 0, -10f);
-            float gridWidth = cols * cellSize + paddingX;
-            float gridHeight = rows * cellSize + paddingY;
-            float screenRatio = (float)Screen.width / (float)Screen.height;
-            float targetRatio = gridWidth / gridHeight;
-
-            if (screenRatio >= targetRatio) mainCam.orthographicSize = gridHeight / 2f;
-            else mainCam.orthographicSize = (gridHeight / 2f) * (targetRatio / screenRatio);
         }
     }
 }
