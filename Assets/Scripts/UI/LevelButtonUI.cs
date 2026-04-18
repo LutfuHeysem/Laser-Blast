@@ -14,10 +14,10 @@ namespace VectorFlow.UI
         public Image lockImage; // Kilitliyse gösterilecek ikon
 
         [Header("Renkler")]
-        public Color lockedColor = Color.gray;
-        public Color unlockedColor = Color.white;
+        public Color lockedColor = new Color(0, 0, 0, 0.6f);
+        public Color unlockedColor = new Color(1, 1, 1, 0.2f);
         public Color starActiveColor = Color.yellow;
-        public Color starInactiveColor = new Color(0.2f, 0.2f, 0.2f, 0.5f); // Soluk renk
+        public Color starInactiveColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 
         private int myLevelIndex;
 
@@ -62,7 +62,7 @@ namespace VectorFlow.UI
                     // i=0 (1.yıldız), i=1 (2.yıldız), i=2 (3.yıldız)
                     if (stars > i)
                     {
-                        starImages[i].color = starActiveColor;
+                        starImages[i].color = Color.white;
                     }
                     else
                     {

@@ -12,6 +12,10 @@ namespace VectorFlow.Gameplay.Blocks
         [Tooltip("Lazerin çıkacağı 4 boş GameObject'i buraya sürükleyin.")]
         public List<Transform> exitPoints;
 
+        [Header("Animasyon")]
+        public Animator animator;
+        public string hitTrigger = "Hit";
+
         private bool isProcessing = false;
 
         public bool OnLaserHit(Vector2 hitPoint, Vector2 incomingDirection, LaserEmitter laserEmitter, out Vector2 outgoingDirection)
@@ -22,6 +26,7 @@ namespace VectorFlow.Gameplay.Blocks
 
             if (laserEmitterPrefab != null && exitPoints != null)
             {
+                if (animator != null) animator.SetTrigger(hitTrigger);
                 StartCoroutine(ProcessLaserHits(hitPoint, laserEmitter.currentBounces));
             }
             else
