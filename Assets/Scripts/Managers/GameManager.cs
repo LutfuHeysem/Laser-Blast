@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
 namespace VectorFlow.Managers
 {
     public enum GameState
@@ -67,7 +68,8 @@ namespace VectorFlow.Managers
                     // Bir sonraki bölümün kilidini aç
                     SaveManager.UnlockNextLevel(currentLevel);
 
-                    if (UIManager.Instance != null) UIManager.Instance.ShowLevelComplete(ScoreManager.Instance.CurrentScore, stars);
+                    //if (UIManager.Instance != null) UIManager.Instance.ShowLevelComplete(ScoreManager.Instance.CurrentScore, stars);
+
                 }
             }
         }
@@ -131,6 +133,8 @@ namespace VectorFlow.Managers
             if (CurrentState == GameState.Playing || CurrentState == GameState.Animating)
             {
                 ChangeState(GameState.LevelComplete);
+                Debug.Log($"[GameManager] Enerji SIOTINNkullanıldı. Kalan Enerji: {CurrentEnergy}");
+                WinScreenManager.Instance.ShowWinScreen(1500, 2);
             }
         }
     }
