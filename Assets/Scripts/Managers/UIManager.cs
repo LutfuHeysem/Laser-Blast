@@ -92,5 +92,25 @@ namespace VectorFlow.Managers
                 Debug.Log($"[Floating Text] {text} at {worldPosition}");
             }
         }
+
+        // --- BUTTON EVENTS ---
+
+        public void OnClickNextLevel()
+        {
+            if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
+            if (MenuManager.Instance != null) MenuManager.Instance.LoadNextLevel();
+        }
+
+        public void OnClickRetry()
+        {
+            if (gameOverPanel != null) gameOverPanel.SetActive(false);
+            if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
+            if (MenuManager.Instance != null) MenuManager.Instance.RetryCurrentLevel();
+        }
+
+        public void OnClickMainMenu()
+        {
+            if (MenuManager.Instance != null) MenuManager.Instance.ShowMainMenu();
+        }
     }
 }

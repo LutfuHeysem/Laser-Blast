@@ -59,6 +59,16 @@ namespace VectorFlow.Managers
                 {
                     ScoreManager.Instance.CalculateFinalScore(CurrentEnergy);
                     int stars = ScoreManager.Instance.CalculateStars();
+                    
+                    if (MenuManager.Instance != null)
+                    {
+                        // Puanı ve yıldızları kaydet
+                        SaveManager.SaveLevelScoreAndStars(MenuManager.Instance.CurrentLevelIndex, ScoreManager.Instance.CurrentScore, stars);
+                        
+                        // Bir sonraki bölümün kilidini aç
+                        SaveManager.UnlockNextLevel(MenuManager.Instance.CurrentLevelIndex);
+                    }
+
                     if (UIManager.Instance != null) UIManager.Instance.ShowLevelComplete(ScoreManager.Instance.CurrentScore, stars);
                 }
             }

@@ -435,11 +435,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1144914124}
-  - component: {fileID: 1144914123}
   - component: {fileID: 1144914122}
   - component: {fileID: 1144914121}
-  - component: {fileID: 1144914120}
   - component: {fileID: 1144914125}
+  - component: {fileID: 1144914127}
+  - component: {fileID: 1144914126}
+  - component: {fileID: 1144914128}
   m_Layer: 0
   m_Name: '[MANAGERS]'
   m_TagString: Untagged
@@ -447,18 +448,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1144914120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1144914119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47cfc47423f9c4a63a5396ea5329129e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.InputManager
 --- !u!114 &1144914121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,13 +464,13 @@ MonoBehaviour:
     levelName: 
     cols: 0
     rows: 0
+    startingEnergy: 5
     blocks: []
   cellSize: 1
   emptyBlockPrefab: {fileID: 6177534166135164744, guid: 50a2af6ed53ca4ef3944a1cf6997b910, type: 3}
   gridParent: {fileID: 1613446892}
   blackGlassPrefab: {fileID: 2650760848169100368, guid: 4e36dfa236aa27a448a953507ef78db4, type: 3}
   glassPadding: 0.2
-  screenPadding: 2
 --- !u!114 &1144914122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,18 +483,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f463dfeb2fd0a4e03aa86654f745739e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.GameManager
---- !u!114 &1144914123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1144914119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e8875472582b499783c9bf2df25fadc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.BeamManager
 --- !u!4 &1144914124
 Transform:
   m_ObjectHideFlags: 0
@@ -533,7 +510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a51d0c62cc9e4ead8bca50be43b2698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
-  levelJsonFile: {fileID: 4900000, guid: dcb58d373ff3846888888477d0d4e43d, type: 3}
+  levelsFolder: Levels
   prefab_Arrow: {fileID: 7092260019878427188, guid: da59d5c70d3cb47c0845e15bdfb1c09e, type: 3}
   prefab_TNT: {fileID: 7231259743185156324, guid: 96be2cdae0205487c9b1e577735e5fd3, type: 3}
   prefab_SteelWall: {fileID: 360161772971020719, guid: 9c90a6fec8ba340e0a857e99f22e7502, type: 3}
@@ -542,6 +519,55 @@ MonoBehaviour:
   prefab_Mirror_NE_SW: {fileID: 4391283176415810618, guid: c79940314576248908e7a40e88a674f5, type: 3}
   prefab_Mirror_SW_NE: {fileID: 5644554284264596944, guid: 37835da3ca182437282d4376ff64aefb, type: 3}
   prefab_Goal: {fileID: 8597103493341502944, guid: 5bafeddfca2484be1908766b0eb5b77f, type: 3}
+--- !u!114 &1144914126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144914119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97f8ab12ba64441a29397f6822edd113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.UIManager
+  energyText: {fileID: 0}
+  scoreText: {fileID: 0}
+  levelCompletePanel: {fileID: 0}
+  levelCompleteScoreText: {fileID: 0}
+  stars: []
+  gameOverPanel: {fileID: 0}
+  floatingTextPrefab: {fileID: 0}
+  mainCanvas: {fileID: 0}
+--- !u!114 &1144914127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144914119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6747b8dcc12904afcb0ff24d3d542eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.ScoreManager
+--- !u!114 &1144914128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144914119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1247dece03e374ea899a1ee67fe8f462, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.MenuManager
+  splashScreenPanel: {fileID: 0}
+  mainMenuPanel: {fileID: 0}
+  levelSelectPanel: {fileID: 0}
+  scoreboardPanel: {fileID: 0}
+  inGameUIPanel: {fileID: 0}
 --- !u!1 &1613446891
 GameObject:
   m_ObjectHideFlags: 0

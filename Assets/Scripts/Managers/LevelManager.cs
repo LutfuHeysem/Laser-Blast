@@ -7,7 +7,8 @@ namespace VectorFlow.Managers
     public class LevelManager : MonoBehaviour
     {
         [Header("Ayarlar")]
-        public TextAsset levelJsonFile; 
+        public string levelsFolder = "Levels"; // Resources altındaki klasör
+        private TextAsset[] availableLevels;
         
         [Header("Prefab Eşleşmeleri")]
         public GameObject prefab_Arrow;
@@ -19,12 +20,71 @@ namespace VectorFlow.Managers
         public GameObject prefab_Mirror_SW_NE;
         public GameObject prefab_Goal;
 
-        void Start() 
+        public static LevelManager Instance { get; private set; }
+
+        private void Awake()
         {
-            LoadLevel();
+            if (Instance == null) Instance = this;
+            else Destroy(this);
         }
 
-        public void LoadLevel() 
+        public void LoadAvailableLevels()
+        {
+            availableLevels = Resources.LoadAll<TextAsset>(levelsFolder);
+            
+            // Level1, Level2, Level10 gibi isimleri doğru sıralamak için sayıya göre diziyoruz
+            System.Array.Sort(availableLevels, (a, b) => 
+            {
+                int numA = ExtractNumber(a.name);
+                int numB = ExtractNumber(b.name);
+                if (numA == numB) return a.name.CompareTo(b.name);
+                return numA.CompareTo(numB);
+            });
+
+            Debug.Log($"[LevelManager] Bulunan bölüm sayısı: {availableLevels.Length}");
+        }
+
+        private int ExtractNumber(string name)
+        {
+            string numberString = System.Text.RegularExpressions.Regex.Match(name, @"\d+").Value;
+            if (int.TryParse(numberString, out int num)) return num;
+            return 999; // Sayı yoksa sona at
+        }
+
+        public int GetTotalLevelsCount()
+        {
+            if (availableLevels == null) LoadAvailableLevels();
+            return availableLevels.Length;
+        }
+
+        public void LoadLevelByIndex(int index)
+        {
+            if (availableLevels == null) LoadAvailableLevels();
+
+            if (index < 1 || index > availableLevels.Length)
+            {
+                Debug.LogError($"[LevelManager] Geçersiz bölüm indeksi: {index}. Toplam bölüm: {availableLevels.Length}");
+                return;
+            }
+
+            // Önceki seviyeden kalanları temizle
+            ClearCurrentLevel();
+
+            // 1 tabanlı indeksi 0 tabanlı diziye çevir
+            TextAsset levelFile = availableLevels[index - 1];
+            LoadLevel(levelFile);
+        }
+
+        public void ClearCurrentLevel()
+        {
+            // Eski blokları sil
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        private void LoadLevel(TextAsset levelJsonFile) 
         {
             if (levelJsonFile == null) return;
 

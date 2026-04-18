@@ -1,13 +1,8 @@
 {
   "levelName": "Prizma Labirenti",
-<<<<<<< Updated upstream
-  "cols": 6,
-  "rows": 8,
   "startingEnergy": 3,
-=======
   "cols": 9,
   "rows": 10,
->>>>>>> Stashed changes
   "blocks": [
     {
       "x": 2,
