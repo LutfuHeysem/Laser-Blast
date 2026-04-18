@@ -57,8 +57,8 @@ namespace VectorFlow.Gameplay.Blocks
 
         private void SpawnSubLaser(Transform exitTransform, int inheritedBounces)
         {
-            // 1. Obveyi oluştur
-            GameObject newLaserObj = Instantiate(laserEmitterPrefab, exitTransform.position, exitTransform.rotation);
+            // 1. Obveyi oluştur (Merkezden başlatıyoruz ki gelen lazerle tam birleşsin)
+            GameObject newLaserObj = Instantiate(laserEmitterPrefab, transform.position, exitTransform.rotation);
 
             // 2. Yönünü ayarla (Bunu offset hesabından ÖNCE yapmalıyız ki startingPoint doğru yöne baksın)
             newLaserObj.transform.right = exitTransform.right;

@@ -135,6 +135,13 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         {
             RaycastHit2D hit = Physics2D.Raycast(currentPos, currentDir, maxDistance);
             Vector3 targetPos = hit.collider != null ? (Vector3)hit.point : (Vector3)(currentPos + currentDir * maxDistance);
+            
+            // GÖRSEL DÜZELTME: Eğer çarptığımız şey bir aynaysa veya prizmaysa, ışını tam merkeze kadar uzat ki kesiklik olmasın.
+            if (hit.collider != null && hit.collider.GetComponent<ILaserInteractable>() != null)
+            {
+                targetPos = hit.collider.transform.position;
+            }
+
             bool hitSomething = hit.collider != null;
 
             if (hitSomething)
@@ -208,7 +215,10 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
                     Vector2 newDirection;
                     if (interactable.OnLaserHit(hit.point, currentDir, this, out newDirection))
                     {
-                        currentPos = hit.point + (newDirection.normalized * 0.01f);
+                        // HİZA DÜZELTME: Eğer bir aynaya veya blok merkeze vuruyorsa, 
+                        // tam ortadan sekmeyi garantilemek için pozisyonu objenin merkezine sabitliyoruz.
+                        currentPos = (Vector2)hit.collider.transform.position; 
+                        
                         currentDir = newDirection.normalized;
                         currentBounces++;
 
