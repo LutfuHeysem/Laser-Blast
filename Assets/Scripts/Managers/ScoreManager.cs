@@ -33,7 +33,6 @@ namespace VectorFlow.Managers
             int finalAmount = amount * ComboMultiplier;
             CurrentScore += finalAmount;
             Debug.Log($"[ScoreManager] Added {finalAmount} score (Base: {amount}, Multiplier: x{ComboMultiplier}). Total Score: {CurrentScore}");
-            // TODO: UIManager.UpdateScoreText();
         }
 
         public void IncrementCombo()
