@@ -1,24 +1,30 @@
 {
+<<<<<<< Updated upstream
   "levelName": "Prizma Labirenti",
   "startingEnergy": 3,
   "cols": 9,
   "rows": 10,
+=======
+  "levelName": "Kuantum Reaksiyonu",
+  "cols": 9,
+  "rows": 12,
+>>>>>>> Stashed changes
   "blocks": [
     {
-      "x": 2,
+      "x": 4,
       "y": 0,
       "type": "Goal",
       "rotation": 0
     },
     {
-      "x": 1,
-      "y": 1,
+      "x": 2,
+      "y": 0,
       "type": "SteelWall",
       "rotation": 0
     },
     {
-      "x": 2,
-      "y": 1,
+      "x": 6,
+      "y": 0,
       "type": "SteelWall",
       "rotation": 0
     },
@@ -29,16 +35,58 @@
       "rotation": 0
     },
     {
-      "x": 2,
+      "x": 4,
+      "y": 1,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 4,
       "y": 2,
       "type": "TNT",
       "rotation": 0
     },
     {
-      "x": 2,
+      "x": 4,
       "y": 4,
       "type": "Prism",
       "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "type": "Prism",
+      "rotation": 0
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "type": "Mirror_SW_NE",
+      "rotation": 45
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "type": "Mirror_NE_SW",
+      "rotation": -45
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "type": "Mirror_NE_SW",
+      "rotation": -45
+    },
+    {
+      "x": 7,
+      "y": 2,
+      "type": "Mirror_SW_NE",
+      "rotation": 45
     },
     {
       "x": 0,
@@ -47,28 +95,52 @@
       "rotation": -45
     },
     {
-      "x": 4,
+      "x": 8,
       "y": 4,
       "type": "Mirror_SW_NE",
       "rotation": 45
     },
     {
       "x": 1,
-      "y": 7,
-      "type": "Arrow",
-      "rotation": 90
+      "y": 4,
+      "type": "Glass",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "type": "Glass",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "type": "Glass",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "type": "Glass",
+      "rotation": 0
     },
     {
       "x": 4,
-      "y": 7,
+      "y": 9,
       "type": "Arrow",
       "rotation": 90
     },
     {
-      "x": 3,
-      "y": 5,
-      "type": "Glass",
-      "rotation": 0
+      "x": 0,
+      "y": 9,
+      "type": "Arrow",
+      "rotation": 90
+    },
+    {
+      "x": 8,
+      "y": 9,
+      "type": "Arrow",
+      "rotation": 90
     }
   ]
 }
