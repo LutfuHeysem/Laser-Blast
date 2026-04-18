@@ -186,10 +186,10 @@ MonoBehaviour:
   headSprite: {fileID: -839707116475405877, guid: 56ebaf5f1198b49cfa299b38a9f1397a, type: 3}
   bodySprite: {fileID: -4978198999983593876, guid: 8ef94eed17f4a474ab2b5d345f50a5d8, type: 3}
   tailSprite: {fileID: 2509410299714403717, guid: 878ae5ffd52bce04db2bf0690267dfcd, type: 3}
-  laserThickness: 0.05
+  laserThickness: 0.2
   spriteDirection: 1
   maxDistance: 50
   maxBounces: 50
-  laserSpeed: 8
+  laserSpeed: 2
   isActivated: 0
   startingPoint: {fileID: 1935747788795347668}
