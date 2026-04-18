@@ -132,9 +132,16 @@ namespace VectorFlow.Managers
         {
             if (CurrentState == GameState.Playing || CurrentState == GameState.Animating)
             {
+                // Önce durumu değiştir (Bu işlem ScoreManager'ı hesaplatır ve verileri kaydeder)
                 ChangeState(GameState.LevelComplete);
-                Debug.Log($"[GameManager] Enerji SIOTINNkullanıldı. Kalan Enerji: {CurrentEnergy}");
-                WinScreenManager.Instance.ShowWinScreen(1500, 2);
+                
+                // Gerçek puan ve yıldızları ScoreManager'dan alıp WinScreen'e gönderiyoruz
+                if (ScoreManager.Instance != null && WinScreenManager.Instance != null)
+                {
+                    int finalScore = ScoreManager.Instance.CurrentScore;
+                    int stars = ScoreManager.Instance.CalculateStars();
+                    WinScreenManager.Instance.ShowWinScreen(finalScore, stars);
+                }
             }
         }
     }

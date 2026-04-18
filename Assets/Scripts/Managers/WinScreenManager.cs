@@ -95,6 +95,6 @@ public class WinScreenManager : MonoBehaviour
     public void OnMainMenuClicked()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MenuScene");
     }
 }
