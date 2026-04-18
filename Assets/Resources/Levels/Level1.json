@@ -1,14 +1,7 @@
 {
-<<<<<<< Updated upstream
-  "levelName": "Prizma Labirenti",
-  "startingEnergy": 3,
-  "cols": 9,
-  "rows": 10,
-=======
   "levelName": "Kuantum Reaksiyonu",
   "cols": 9,
   "rows": 12,
->>>>>>> Stashed changes
   "blocks": [
     {
       "x": 4,
