@@ -68,6 +68,11 @@ namespace VectorFlow.Gameplay.Blocks
                 SpriteRenderer sr = newLaserObj.GetComponent<SpriteRenderer>();
                 if (sr != null) sr.enabled = false;
 
+                // FİZİKSEL ÇAKIŞMAYI ÖNLEME:
+                // Üst üste binen görünmez okların collider'ları birbirini engellemesin diye siliyoruz.
+                Collider2D coll = newLaserObj.GetComponent<Collider2D>();
+                if (coll != null) Destroy(coll);
+
                 newEmitter.isActivated = true;
                 // Kendi collider'ını (prizma) yoksay
                 newEmitter.ShootLaser(GetComponent<Collider2D>());

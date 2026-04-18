@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class LaserEmitter : MonoBehaviour
+public class LaserEmitter : MonoBehaviour, ILaserInteractable
 {
     public enum SpriteDrawDirection { Horizontal, Vertical }
 
@@ -40,6 +40,21 @@ public class LaserEmitter : MonoBehaviour
         }
     }
 
+    public bool OnLaserHit(Vector2 hitPoint, Vector2 incomingDirection, LaserEmitter sourceLaser, out Vector2 outgoingDirection)
+    {
+        outgoingDirection = Vector2.zero;
+
+        // Eğer başka bir lazer bize çarparsa ve biz henüz ateşlenmemişsek, zincirleme ateş (chain) başlasın!
+        if (!isActivated)
+        {
+            isActivated = true;
+            if (laserCoroutine != null) StopCoroutine(laserCoroutine);
+            laserCoroutine = StartCoroutine(AnimateLaser());
+        }
+
+        return false; // Işın silahın içinden geçmesin, silahta dursun.
+    }
+
     public void ShootLaser(Collider2D ignoreCollider = null)
     {
         if (laserCoroutine != null) StopCoroutine(laserCoroutine);
@@ -59,8 +74,8 @@ public class LaserEmitter : MonoBehaviour
     {
         ClearLaser();
 
-        Vector2 currentPos = startingPoint.position;
-        Vector2 currentDir = transform.right;
+        Vector2 currentPos = startingPoint != null ? (Vector2)startingPoint.position : (Vector2)transform.position;
+        Vector2 currentDir = transform.right; // Önceden transform.up kullanılıyordu, senin yeni sistemine göre right
         int bounces = 0;
 
         Collider2D myCollider = GetComponent<Collider2D>();
@@ -80,6 +95,20 @@ public class LaserEmitter : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(currentPos, currentDir, maxDistance);
             Vector3 targetPos = hit.collider != null ? (Vector3)hit.point : (Vector3)(currentPos + currentDir * maxDistance);
             bool hitSomething = hit.collider != null;
+
+            if (hitSomething)
+            {
+                ILaserInteractable interactable = hit.collider.GetComponent<ILaserInteractable>();
+                // GÖRSEL DÜZELTME: Eğer vurduğumuz obje bir silahsa, çizginin ucunu silahın collider sınırına (hit.point)
+                // değil, silahın derinliğine kadar uzatıyoruz!
+                if (interactable is LaserEmitter)
+                {
+                    Vector3 gunCenter = hit.collider.transform.position;
+                    // Kaymayı (sliding) engellemek için, hedefin merkezini ışın çizgisine izdüşürüyoruz:
+                    float distanceAlongRay = Vector3.Dot(gunCenter - (Vector3)currentPos, currentDir);
+                    targetPos = (Vector3)currentPos + (Vector3)currentDir * distanceAlongRay;
+                }
+            }
 
             float distanceToTarget = Vector3.Distance(currentPos, targetPos);
             float travelledDistance = 0f;

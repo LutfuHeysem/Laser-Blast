@@ -28,7 +28,7 @@
       "rotation": 0
     },
     {
-      "x": 1,
+      "x": 2,
       "y": 2,
       "type": "TNT",
       "rotation": 0
@@ -61,7 +61,7 @@
       "x": 4,
       "y": 7,
       "type": "Arrow",
-      "rotation": 0
+      "rotation": 90
     },
     {
       "x": 3,
