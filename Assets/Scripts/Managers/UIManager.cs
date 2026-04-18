@@ -37,8 +37,6 @@ namespace VectorFlow.Managers
 
         private void Start()
         {
-            if (energyText != null) energyText.text = "test";
-            if (scoreText != null) scoreText.text = "test";
             // Başlangıçta paneller kapalı olsun
             if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
             if (gameOverPanel != null) gameOverPanel.SetActive(false);
