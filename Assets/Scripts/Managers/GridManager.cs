@@ -29,59 +29,61 @@ namespace VectorFlow.Managers
 
         public void InitializeGrid(LevelData levelData)
         {
-            currentLevel = levelData;
-
+            currentLevel = levelData; 
             logicalGrid = new CellType[levelData.rows, levelData.cols];
+            
             for (int r = 0; r < levelData.rows; r++)
             {
                 for (int c = 0; c < levelData.cols; c++)
                 {
                     logicalGrid[r, c] = levelData.GetCell(c, r);
-
+                    
                     if (emptyBlockPrefab != null)
                     {
+                        // Z değerini 0.1f yaparak arka planı objelerin biraz gerisine itiyoruz
                         Vector3 spawnPos = GetWorldPosition(new Vector2Int(c, r));
+                        spawnPos.z = 0.1f; 
+
                         Instantiate(emptyBlockPrefab, spawnPos, Quaternion.identity, gridParent != null ? gridParent : transform);
                     }
                 }
             }
-
-            // Siyah Camı Oluştur ve Boyutlandır (Kameraya dokunmuyoruz!)
+            
+            // Arka planları oluştur ve kamerayı ayarla
             CreateBlackGlassBackground();
-
-            Debug.Log($"[GridManager] Initialized {levelData.cols}x{levelData.rows} grid.");
+            FitCameraToGrid(levelData.cols, levelData.rows, 0.5f, 2.0f);
+            
+            Debug.Log($"[GridManager] Grid {levelData.cols}x{levelData.rows} boyutunda kuruldu.");
         }
 
         private void CreateBlackGlassBackground()
         {
             if (blackGlassPrefab == null) return;
 
-            // Camın toplam genişlik ve yüksekliği (hücrelerin toplamı + taşma payı)
             float totalWidth = (currentLevel.cols * cellSize) + glassPadding;
             float totalHeight = (currentLevel.rows * cellSize) + glassPadding;
 
-            // Z eksenini biraz arkaya atıyoruz (örn: 0.5f) ki grid elemanlarının arkasında kalsın
+            // En arkada durması için Z'yi 0.5f yapıyoruz
             Vector3 glassPosition = new Vector3(0, 0, 0.5f);
-
             GameObject glass = Instantiate(blackGlassPrefab, glassPosition, Quaternion.identity, transform);
 
-            // Quad'ın boyutunu harita ölçülerine göre uzatıyoruz
             glass.transform.localScale = new Vector3(totalWidth, totalHeight, 1f);
             glass.name = "Background_BlackGlass";
+            
+            // Kodla da Order in Layer'ı garantiye alalım (isteğe bağlı)
+            var sr = glass.GetComponent<SpriteRenderer>();
+            if(sr != null) sr.sortingOrder = -10;
         }
 
-        public CellType GetCellType(Vector2Int gridPos)
+        public Vector3 GetWorldPosition(Vector2Int gridPos)
         {
-            if (!IsValidPosition(gridPos)) return default(CellType);
-            return logicalGrid[gridPos.y, gridPos.x];
+            float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
+            float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
+            // Gameplay objeleri tam 0 noktasında oluşur
+            return new Vector3((gridPos.x * cellSize) - offsetX, (-gridPos.y * cellSize) + offsetY, 0);
         }
 
-        public void SetCellType(Vector2Int gridPos, CellType newType)
-        {
-            if (!IsValidPosition(gridPos)) return;
-            logicalGrid[gridPos.y, gridPos.x] = newType;
-        }
-
+        // --- DİĞER FONKSİYONLAR (Aynı Kalıyor) ---
         public bool IsValidPosition(Vector2Int gridPos)
         {
             if (logicalGrid == null) return false;
@@ -89,21 +91,18 @@ namespace VectorFlow.Managers
                    gridPos.y >= 0 && gridPos.y < logicalGrid.GetLength(0);
         }
 
-        public Vector3 GetWorldPosition(Vector2Int gridPos)
+        public void FitCameraToGrid(int cols, int rows, float paddingX = 0.5f, float paddingY = 2.0f)
         {
-            float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
-            float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
-            return new Vector3((gridPos.x * cellSize) - offsetX, (-gridPos.y * cellSize) + offsetY, 0);
-        }
+            Camera mainCam = Camera.main;
+            if (mainCam == null) return;
+            mainCam.transform.position = new Vector3(0, 0, -10f);
+            float gridWidth = cols * cellSize + paddingX;
+            float gridHeight = rows * cellSize + paddingY;
+            float screenRatio = (float)Screen.width / (float)Screen.height;
+            float targetRatio = gridWidth / gridHeight;
 
-        public Vector2Int GetGridPosition(Vector3 worldPos)
-        {
-            float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
-            float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
-
-            int x = Mathf.RoundToInt((worldPos.x + offsetX) / cellSize);
-            int y = Mathf.RoundToInt(-(worldPos.y - offsetY) / cellSize);
-            return new Vector2Int(x, y);
+            if (screenRatio >= targetRatio) mainCam.orthographicSize = gridHeight / 2f;
+            else mainCam.orthographicSize = (gridHeight / 2f) * (targetRatio / screenRatio);
         }
     }
 }
