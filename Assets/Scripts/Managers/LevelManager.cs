@@ -28,6 +28,12 @@ namespace VectorFlow.Managers
             else Destroy(this);
         }
 
+        private void Start()
+        {
+            int selectedLevel = PlayerPrefs.GetInt("SelectedLevel", 1);
+            LoadLevelByIndex(selectedLevel);
+        }
+
         public void LoadAvailableLevels()
         {
             availableLevels = Resources.LoadAll<TextAsset>(levelsFolder);

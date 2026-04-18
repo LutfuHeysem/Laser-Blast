@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro; // TextMeshPro için
 
 namespace VectorFlow.Managers
@@ -93,24 +94,36 @@ namespace VectorFlow.Managers
             }
         }
 
-        // --- BUTTON EVENTS ---
-
         public void OnClickNextLevel()
         {
             if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
-            if (MenuManager.Instance != null) MenuManager.Instance.LoadNextLevel();
+            
+            int current = PlayerPrefs.GetInt("SelectedLevel", 1);
+            int total = LevelManager.Instance != null ? LevelManager.Instance.GetTotalLevelsCount() : 999;
+            
+            if (current < total)
+            {
+                PlayerPrefs.SetInt("SelectedLevel", current + 1);
+                PlayerPrefs.Save();
+                SceneManager.LoadScene("LevelScene");
+            }
+            else
+            {
+                // Son level bittiyse menüye dön
+                SceneManager.LoadScene("MenuScene");
+            }
         }
 
         public void OnClickRetry()
         {
             if (gameOverPanel != null) gameOverPanel.SetActive(false);
             if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
-            if (MenuManager.Instance != null) MenuManager.Instance.RetryCurrentLevel();
+            SceneManager.LoadScene("LevelScene");
         }
 
         public void OnClickMainMenu()
         {
-            if (MenuManager.Instance != null) MenuManager.Instance.ShowMainMenu();
+            SceneManager.LoadScene("MenuScene");
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 namespace VectorFlow.Managers
@@ -12,11 +13,6 @@ namespace VectorFlow.Managers
         public GameObject mainMenuPanel;
         public GameObject levelSelectPanel;
         public GameObject scoreboardPanel;
-        
-        [Header("In-Game Panel Group")]
-        public GameObject inGameUIPanel; // UIManager'ın yönettiği oyun içi UI grubu
-
-        public int CurrentLevelIndex { get; private set; } = 1;
 
         private void Awake()
         {
@@ -46,27 +42,18 @@ namespace VectorFlow.Managers
             if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
             if (levelSelectPanel != null) levelSelectPanel.SetActive(false);
             if (scoreboardPanel != null) scoreboardPanel.SetActive(false);
-            if (inGameUIPanel != null) inGameUIPanel.SetActive(false);
         }
 
         public void ShowMainMenu()
         {
             CloseAllPanels();
             if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
-            
-            // Eğer Main Menu'ye döndüysek, arkadaki leveli temizleyebiliriz
-            if (LevelManager.Instance != null)
-            {
-                LevelManager.Instance.ClearCurrentLevel();
-            }
         }
 
         public void ShowLevelSelect()
         {
             CloseAllPanels();
             if (levelSelectPanel != null) levelSelectPanel.SetActive(true);
-            
-            // TODO: Level butonlarını dinamik olarak oluştur veya güncelle
         }
 
         public void ShowScoreboard()
@@ -78,39 +65,12 @@ namespace VectorFlow.Managers
         // Oyunu Başlatma (Level Select'ten bir butona basıldığında çağrılır)
         public void StartLevel(int levelIndex)
         {
-            CurrentLevelIndex = levelIndex;
-            CloseAllPanels();
+            // Seçilen bölümü hafızaya kaydet
+            PlayerPrefs.SetInt("SelectedLevel", levelIndex);
+            PlayerPrefs.Save();
 
-            // Oyun içi UI'ı aktif et
-            if (inGameUIPanel != null) inGameUIPanel.SetActive(true);
-
-            // Bölümü yükle
-            if (LevelManager.Instance != null)
-            {
-                LevelManager.Instance.LoadLevelByIndex(levelIndex);
-            }
-        }
-
-        // Next Level (Level Complete ekranından çağrılır)
-        public void LoadNextLevel()
-        {
-            int totalLevels = LevelManager.Instance != null ? LevelManager.Instance.GetTotalLevelsCount() : 0;
-            
-            if (CurrentLevelIndex < totalLevels)
-            {
-                StartLevel(CurrentLevelIndex + 1);
-            }
-            else
-            {
-                Debug.Log("Oyun bitti! Son bölümü de geçtiniz.");
-                ShowMainMenu();
-            }
-        }
-
-        // Retry (Game Over ekranından çağrılır)
-        public void RetryCurrentLevel()
-        {
-            StartLevel(CurrentLevelIndex);
+            // Level sahnesini yükle
+            SceneManager.LoadScene("LevelScene");
         }
     }
 }
