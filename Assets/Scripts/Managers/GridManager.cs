@@ -17,26 +17,27 @@ namespace VectorFlow.Managers
         public GameObject emptyBlockPrefab;
         public Transform gridParent;
 
+        [Header("Görsel Ayarlar")]
+        public GameObject blackGlassPrefab;
+        public float glassPadding = 0.2f;
+
         private void Awake()
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
         }
 
-        // Start() içindeki yüklemeyi sildik çünkü artık işlemi LevelManager tetikliyor.
-
         public void InitializeGrid(LevelData levelData)
         {
-            currentLevel = levelData; // HAYAT KURTARAN DÜZELTME: Bu satır olmadan GetWorldPosition çöker!
-            
+            currentLevel = levelData;
+
             logicalGrid = new CellType[levelData.rows, levelData.cols];
             for (int r = 0; r < levelData.rows; r++)
             {
                 for (int c = 0; c < levelData.cols; c++)
                 {
                     logicalGrid[r, c] = levelData.GetCell(c, r);
-                    
-                    // Görsel olarak base gridi oluştur
+
                     if (emptyBlockPrefab != null)
                     {
                         Vector3 spawnPos = GetWorldPosition(new Vector2Int(c, r));
@@ -44,12 +45,34 @@ namespace VectorFlow.Managers
                     }
                 }
             }
+
+            // Siyah Camı Oluştur ve Boyutlandır (Kameraya dokunmuyoruz!)
+            CreateBlackGlassBackground();
+
             Debug.Log($"[GridManager] Initialized {levelData.cols}x{levelData.rows} grid.");
+        }
+
+        private void CreateBlackGlassBackground()
+        {
+            if (blackGlassPrefab == null) return;
+
+            // Camın toplam genişlik ve yüksekliği (hücrelerin toplamı + taşma payı)
+            float totalWidth = (currentLevel.cols * cellSize) + glassPadding;
+            float totalHeight = (currentLevel.rows * cellSize) + glassPadding;
+
+            // Z eksenini biraz arkaya atıyoruz (örn: 0.5f) ki grid elemanlarının arkasında kalsın
+            Vector3 glassPosition = new Vector3(0, 0, 0.5f);
+
+            GameObject glass = Instantiate(blackGlassPrefab, glassPosition, Quaternion.identity, transform);
+
+            // Quad'ın boyutunu harita ölçülerine göre uzatıyoruz
+            glass.transform.localScale = new Vector3(totalWidth, totalHeight, 1f);
+            glass.name = "Background_BlackGlass";
         }
 
         public CellType GetCellType(Vector2Int gridPos)
         {
-            if (!IsValidPosition(gridPos)) return default(CellType); 
+            if (!IsValidPosition(gridPos)) return default(CellType);
             return logicalGrid[gridPos.y, gridPos.x];
         }
 
@@ -70,14 +93,14 @@ namespace VectorFlow.Managers
         {
             float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
             float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
-            return new Vector3((gridPos.x * cellSize) - offsetX, (-gridPos.y * cellSize) + offsetY, 0); 
+            return new Vector3((gridPos.x * cellSize) - offsetX, (-gridPos.y * cellSize) + offsetY, 0);
         }
 
         public Vector2Int GetGridPosition(Vector3 worldPos)
         {
             float offsetX = (currentLevel.cols - 1) * cellSize / 2f;
             float offsetY = (currentLevel.rows - 1) * cellSize / 2f;
-            
+
             int x = Mathf.RoundToInt((worldPos.x + offsetX) / cellSize);
             int y = Mathf.RoundToInt(-(worldPos.y - offsetY) / cellSize);
             return new Vector2Int(x, y);

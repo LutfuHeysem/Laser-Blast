@@ -479,6 +479,9 @@ MonoBehaviour:
   cellSize: 1
   emptyBlockPrefab: {fileID: 6177534166135164744, guid: 50a2af6ed53ca4ef3944a1cf6997b910, type: 3}
   gridParent: {fileID: 1613446892}
+  blackGlassPrefab: {fileID: 2650760848169100368, guid: 4e36dfa236aa27a448a953507ef78db4, type: 3}
+  glassPadding: 0.2
+  screenPadding: 2
 --- !u!114 &1144914122
 MonoBehaviour:
   m_ObjectHideFlags: 0
