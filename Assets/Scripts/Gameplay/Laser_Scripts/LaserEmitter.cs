@@ -13,7 +13,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
     public float laserThickness = 0.5f;
 
     [Tooltip("Sprite dosyası yukarı doğru çizildiyse Vertical, sağa doğru çizildiyse Horizontal seçin.")]
-    public SpriteDrawDirection spriteDirection = SpriteDrawDirection.Vertical; // Senin için varsayılanı Vertical yaptım
+    public SpriteDrawDirection spriteDirection = SpriteDrawDirection.Vertical;
 
     [Header("Lazer Ayarları")]
     public float maxDistance = 50f;
@@ -26,8 +26,14 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
     private Coroutine laserCoroutine;
     private List<GameObject> spawnedLaserParts = new List<GameObject>();
 
+    // Animasyon kontrolcüsü
+    private Animator animator;
+
     void Start()
     {
+        // Başlangıçta objenin üzerindeki Animator bileşenini bul
+        animator = GetComponent<Animator>();
+
         if (!isActivated) ClearLaser();
     }
 
@@ -51,6 +57,10 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             }
 
             isActivated = true;
+
+            // Ateşleme başladığında animasyonu oynat
+            if (animator != null) animator.Play("Laser_shoot");
+
             if (laserCoroutine != null) StopCoroutine(laserCoroutine);
             laserCoroutine = StartCoroutine(AnimateLaser());
         }
@@ -72,6 +82,10 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             }
 
             isActivated = true;
+
+            // Zincirleme ateşleme başladığında da animasyonu oynat
+            if (animator != null) animator.Play("Laser_shoot");
+
             if (laserCoroutine != null) StopCoroutine(laserCoroutine);
             laserCoroutine = StartCoroutine(AnimateLaser());
         }
@@ -104,7 +118,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         ClearLaser();
 
         Vector2 currentPos = startingPoint != null ? (Vector2)startingPoint.position : (Vector2)transform.position;
-        Vector2 currentDir = transform.right; // Önceden transform.up kullanılıyordu, senin yeni sistemine göre right
+        Vector2 currentDir = transform.up;
 
         Collider2D myCollider = GetComponent<Collider2D>();
         if (myCollider != null) myCollider.enabled = false;
@@ -113,7 +127,6 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         if (tailSprite != null)
         {
             GameObject tailObj = CreateSpriteObject("Laser_Tail", tailSprite, currentPos, currentDir, false);
-            // DÜZELTME 1: Kuyruk sprite'ını lazerin kalınlığına göre orantılı küçült
             float tailScale = laserThickness / tailSprite.bounds.size.x;
             tailObj.transform.localScale = new Vector3(tailScale, tailScale, 1f);
         }
@@ -127,8 +140,6 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             if (hitSomething)
             {
                 ILaserInteractable interactable = hit.collider.GetComponent<ILaserInteractable>();
-                // GÖRSEL DÜZELTME: Eğer vurduğumuz obje bir silahsa, çizginin ucunu silahın collider sınırına (hit.point)
-                // değil, silahın derinliğine kadar uzatıyoruz!
                 if (interactable is LaserEmitter)
                 {
                     Vector3 gunCenter = hit.collider.transform.position;
@@ -144,7 +155,6 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             GameObject bodyObj = CreateSpriteObject("Laser_Body", bodySprite, currentPos, currentDir, true);
             GameObject headObj = CreateSpriteObject("Laser_Head", headSprite, currentPos, currentDir, false);
 
-            // DÜZELTME 2: Kafa sprite'ını lazerin kalınlığına göre orantılı küçült (en-boy oranı bozulmasın diye X ve Y'ye aynı scale veriyoruz)
             if (headSprite != null)
             {
                 float headScale = laserThickness / headSprite.bounds.size.x;
@@ -165,21 +175,15 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
 
                 if (mainCam != null)
                 {
-                    // Kameranın görüş alanını 0 ile 1 arasında bir koordinata çeviriyoruz
                     Vector3 viewPos = mainCam.WorldToViewportPoint(currentTipPos);
-
-                    // x ve y, 0'dan küçük veya 1'den büyükse ekranın dışındadır.
-                    // -0.05 ve 1.05 gibi bir tolerans verdik ki aniden değil, ucu tam çıkarken yok olsun.
                     if (viewPos.x < -0.05f || viewPos.x > 1.05f || viewPos.y < -0.05f || viewPos.y > 1.05f)
                     {
                         isOffScreen = true;
-                        break; // Ekrandan çıktıysa animasyonu hemen durdur
+                        break;
                     }
                 }
 
                 float currentDist = Vector3.Distance(currentPos, currentTipPos);
-
-                // Gövdeyi sündür
                 bodyObj.transform.localScale = new Vector3(laserThickness / spriteWidth, currentDist / spriteHeight, 1f);
                 bodyObj.transform.position = (Vector3)currentPos + ((Vector3)currentTipPos - (Vector3)currentPos) / 2f;
                 headObj.transform.position = currentTipPos;
@@ -189,7 +193,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
 
             if (isOffScreen)
             {
-                break; // Dıştaki while(bounces) döngüsünü de kırar
+                break;
             }
 
             bodyObj.transform.localScale = new Vector3(laserThickness / spriteWidth, distanceToTarget / spriteHeight, 1f);
@@ -220,25 +224,27 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         if (ignoreCollider != null) ignoreCollider.enabled = true;
         if (myCollider != null) myCollider.enabled = true;
 
+        // Lazer hedefe ulaştıktan sonra çizgilerin ekranda kalma süresi
         yield return new WaitForSeconds(0.1f);
 
-        // Ekranda kalan o lazer parçasını tamamen yok et
+        // Lazer çizgilerini sahneden sil
         ClearLaser();
 
         if (VectorFlow.Managers.GameManager.Instance != null)
         {
             VectorFlow.Managers.GameManager.Instance.UnregisterActiveLaser(this);
         }
+
+        // Lazer çizimi silindikten sonra, silahın kendisini yok etmeden önce 1.2 saniye bekle
+        yield return new WaitForSeconds(1.2f);
+
+        // Süre dolunca silahı sahneden tamamen sil
+        Destroy(gameObject);
     }
 
     private GameObject CreateSpriteObject(string objName, Sprite sprite, Vector3 pos, Vector3 dir, bool isBody)
     {
         GameObject obj = new GameObject(objName);
-
-        // ÖNEMLİ: Parent atamasını bilerek kaldırdık! 
-        // Böylece Prizmanın Scale (2,2) değeri lazerleri yanlışlıkla devasa boyutlara çıkarmayacak.
-        // obj.transform.parent = transform; 
-
         obj.transform.position = pos;
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
