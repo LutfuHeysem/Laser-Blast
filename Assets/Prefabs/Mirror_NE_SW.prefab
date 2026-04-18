@@ -151,3 +151,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07ce38e5ca9964cabbde0936ffbe0302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Gameplay.Blocks.MirrorBlock
+  allowDiagonals: 1
