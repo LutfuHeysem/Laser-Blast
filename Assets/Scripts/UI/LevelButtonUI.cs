@@ -27,7 +27,7 @@ namespace VectorFlow.UI
             
             if (levelNumberText != null)
             {
-                levelNumberText.text = levelIndex.ToString();
+                levelNumberText.text = "Bölüm " + levelIndex.ToString();
             }
 
             if (scoreText != null)

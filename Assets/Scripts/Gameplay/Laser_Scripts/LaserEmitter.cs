@@ -21,6 +21,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
     public float laserSpeed = 20f;
     public bool isActivated = false;
     public Transform startingPoint;
+    public int currentBounces = 0;
 
     private Coroutine laserCoroutine;
     private List<GameObject> spawnedLaserParts = new List<GameObject>();
@@ -104,7 +105,6 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
 
         Vector2 currentPos = startingPoint != null ? (Vector2)startingPoint.position : (Vector2)transform.position;
         Vector2 currentDir = transform.right; // Önceden transform.up kullanılıyordu, senin yeni sistemine göre right
-        int bounces = 0;
 
         Collider2D myCollider = GetComponent<Collider2D>();
         if (myCollider != null) myCollider.enabled = false;
@@ -118,7 +118,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             tailObj.transform.localScale = new Vector3(tailScale, tailScale, 1f);
         }
 
-        while (bounces < maxBounces)
+        while (currentBounces < maxBounces)
         {
             RaycastHit2D hit = Physics2D.Raycast(currentPos, currentDir, maxDistance);
             Vector3 targetPos = hit.collider != null ? (Vector3)hit.point : (Vector3)(currentPos + currentDir * maxDistance);
@@ -196,7 +196,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             bodyObj.transform.position = (Vector3)currentPos + ((Vector3)targetPos - (Vector3)currentPos) / 2f;
             headObj.transform.position = targetPos;
 
-            if (hitSomething)
+            if (hitSomething && hit.collider != null)
             {
                 ILaserInteractable interactable = hit.collider.GetComponent<ILaserInteractable>();
                 if (interactable != null)
@@ -206,7 +206,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
                     {
                         currentPos = hit.point + (newDirection.normalized * 0.01f);
                         currentDir = newDirection.normalized;
-                        bounces++;
+                        currentBounces++;
 
                         Destroy(headObj);
                         spawnedLaserParts.Remove(headObj);
