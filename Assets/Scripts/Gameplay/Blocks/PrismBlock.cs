@@ -1,44 +1,75 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace VectorFlow.Gameplay.Blocks
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class PrismBlock : MonoBehaviour, ILaserInteractable
     {
-        [Tooltip("Lazerin bölüneceği GameObject (LaserEmitter içeren) Prefab'i")]
+        [Header("Ayarlar")]
         public GameObject laserEmitterPrefab;
+
+        [Tooltip("Lazerin çıkacağı 4 boş GameObject'i buraya sürükleyin.")]
+        public List<Transform> exitPoints;
 
         public bool OnLaserHit(Vector2 hitPoint, Vector2 incomingDirection, LaserEmitter laserEmitter, out Vector2 outgoingDirection)
         {
             outgoingDirection = Vector2.zero;
 
-            if (laserEmitterPrefab != null)
+            if (laserEmitterPrefab != null && exitPoints != null)
             {
-                SpawnSubLaser(transform.right);
-                SpawnSubLaser(-transform.right);
+                foreach (Transform exitPoint in exitPoints)
+                {
+                    //geldiği yöne en yakın olan çıkışı sayma
+                    if (Vector2.Distance(hitPoint, exitPoint.position) > 0.2f)
+                    {
+                        SpawnSubLaser(exitPoint);
+                    }
+                }
             }
             else
             {
-                Debug.LogWarning("PrismBlock: laserEmitterPrefab atanmamış!");
+                Debug.LogWarning("PrismBlock: Prefab veya Exit Points eksik!");
             }
 
-            return false; 
+            return false; // Ana lazeri burada sonlandırıyoruz.
         }
 
-        private void SpawnSubLaser(Vector2 direction)
+        private void SpawnSubLaser(Transform exitTransform)
         {
-            GameObject newLaserObj = Instantiate(laserEmitterPrefab, transform.position, Quaternion.identity);
-            newLaserObj.transform.up = direction; 
+            // 1. Obveyi oluştur
+            GameObject newLaserObj = Instantiate(laserEmitterPrefab, exitTransform.position, exitTransform.rotation);
 
-            // Alt lazerin Arrow görseli görünmesin (üst üste binmeyi engeller)
-            SpriteRenderer sr = newLaserObj.GetComponent<SpriteRenderer>();
-            if (sr != null) sr.enabled = false;
+            // 2. Yönünü ayarla (Bunu offset hesabından ÖNCE yapmalıyız ki startingPoint doğru yöne baksın)
+            newLaserObj.transform.right = exitTransform.right;
 
             LaserEmitter newEmitter = newLaserObj.GetComponent<LaserEmitter>();
             if (newEmitter != null)
             {
+                // --- SİHİRLİ DOKUNUŞ BURASI ---
+                // Eğer startingPoint silah namlusu için ileri alınmışsa, aradaki farkı (offset) buluyoruz.
+                if (newEmitter.startingPoint != null)
+                {
+                    // startingPoint'in dünya üzerindeki yeri ile ana objenin yeri arasındaki fark
+                    Vector3 offset = newEmitter.startingPoint.position - newLaserObj.transform.position;
+
+                    // Ana objeyi bu fark kadar geriye çekiyoruz. 
+                    // Böylece startingPoint tam olarak 'exitTransform.position' noktasına oturuyor!
+                    newLaserObj.transform.position -= offset;
+                }
+                // -------------------------------
+
+                // Z eksenini 2D oyunlar için güvenliğe al (Kopukluğu önlemek için)
+                Vector3 fixedPos = newLaserObj.transform.position;
+                fixedPos.z = 0f;
+                newLaserObj.transform.position = fixedPos;
+
+                // Görsel oku kapat (çünkü bu sadece prizmadan çıkan bir ışın, silah değil)
+                SpriteRenderer sr = newLaserObj.GetComponent<SpriteRenderer>();
+                if (sr != null) sr.enabled = false;
+
                 newEmitter.isActivated = true;
-                // Kendisini doğuran prizmanın collider'ını yok saymasını söylüyoruz (Sonsuz döngüyü engeller)
+                // Kendi collider'ını (prizma) yoksay
                 newEmitter.ShootLaser(GetComponent<Collider2D>());
             }
         }

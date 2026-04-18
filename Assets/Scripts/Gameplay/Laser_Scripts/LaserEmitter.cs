@@ -1,15 +1,19 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaserEmitter : MonoBehaviour
 {
     [Header("Lazer Ayarları")]
-    public float maxDistance = 50f; // Lazerin gidebileceği maksimum mesafe
-    public int maxBounces = 50; 
-    public bool isActivated = false; 
-    
+    public float maxDistance = 50f;
+    public int maxBounces = 50;
+    public float laserSpeed = 20f; // Saniyede kaç birim ilerleyeceği
+    public bool isActivated = false;
+    public Transform startingPoint;
+
     private LineRenderer lineRenderer;
+    private Coroutine laserCoroutine;
 
     private void Awake()
     {
@@ -19,7 +23,7 @@ public class LaserEmitter : MonoBehaviour
     void Start()
     {
         if (lineRenderer != null && !isActivated)
-            lineRenderer.positionCount = 0; // Eğer sonradan yaratılıp aktive edildiyse silme!
+            lineRenderer.positionCount = 0;
     }
 
     void OnMouseDown()
@@ -27,75 +31,92 @@ public class LaserEmitter : MonoBehaviour
         if (!isActivated)
         {
             isActivated = true;
-            ShootLaser();
+            if (laserCoroutine != null) StopCoroutine(laserCoroutine);
+            laserCoroutine = StartCoroutine(AnimateLaser());
         }
     }
 
+    // Bu metod dışarıdan çağrılırsa (örneğin bir aynadan tetiklenirse) diye duruyor
     public void ShootLaser(Collider2D ignoreCollider = null)
     {
-        List<Vector3> points = new List<Vector3>();
-        points.Add(transform.position);
+        if (laserCoroutine != null) StopCoroutine(laserCoroutine);
+        laserCoroutine = StartCoroutine(AnimateLaser(ignoreCollider));
+    }
 
-        Vector2 currentPos = transform.position;
-        Vector2 currentDir = transform.up;
+    IEnumerator AnimateLaser(Collider2D ignoreCollider = null)
+    {
+        lineRenderer.positionCount = 1;
+        lineRenderer.SetPosition(0, startingPoint.position);
+
+        List<Vector3> points = new List<Vector3> { startingPoint.position };
+        Vector2 currentPos = startingPoint.position;
+        Vector2 currentDir = transform.right;
         int bounces = 0;
 
-        // Lazerin kendi collider'ına (Arrow'a) ve doğduğu prizmaya çarpmasını geçici olarak engelliyoruz
         Collider2D myCollider = GetComponent<Collider2D>();
         if (myCollider != null) myCollider.enabled = false;
         if (ignoreCollider != null) ignoreCollider.enabled = false;
 
         while (bounces < maxBounces)
         {
-            // Sizin eski scriptinizdeki gibi temiz ve basit bir Raycast atıyoruz
             RaycastHit2D hit = Physics2D.Raycast(currentPos, currentDir, maxDistance);
+            Vector3 targetPos;
+            bool hitSomething = false;
 
             if (hit.collider != null)
             {
-                // Işın bir şeye ÇARPTI!
-                points.Add(hit.point);
+                targetPos = hit.point;
+                hitSomething = true;
+            }
+            else
+            {
+                targetPos = (Vector3)(currentPos + currentDir * maxDistance);
+            }
 
-                // Çarptığı obje yeni sistemdeki ILaserInteractable arayüzüne sahip mi?
+            // --- ADIM ADIM İLERLEME MANTIĞI ---
+            float distanceToTarget = Vector3.Distance(currentPos, targetPos);
+            float travelledDistance = 0f;
+
+            // Mevcut noktadan hedef noktaya lazeri uzatıyoruz
+            lineRenderer.positionCount++;
+            int currentIndex = lineRenderer.positionCount - 1;
+
+            while (travelledDistance < distanceToTarget)
+            {
+                travelledDistance += laserSpeed * Time.deltaTime;
+                float t = Mathf.Clamp01(travelledDistance / distanceToTarget);
+                Vector3 currentTipPos = Vector3.Lerp(currentPos, targetPos, t);
+
+                lineRenderer.SetPosition(currentIndex, currentTipPos);
+                yield return null; // Bir sonraki frame'e kadar bekle
+            }
+            // ----------------------------------
+
+            points.Add(targetPos);
+            lineRenderer.SetPosition(currentIndex, targetPos);
+
+            if (hitSomething)
+            {
                 ILaserInteractable interactable = hit.collider.GetComponent<ILaserInteractable>();
                 if (interactable != null)
                 {
                     Vector2 newDirection;
-                    // Objeye ne yapması gerektiğini sor (Ayna ise yansıtacak, çelik ise durduracak vs.)
                     bool shouldContinue = interactable.OnLaserHit(hit.point, currentDir, this, out newDirection);
-                    
+
                     if (shouldContinue)
                     {
-                        // Ayna gibi seken objelerde, bir sonraki ışının tekrar aynı aynaya çarpıp 
-                        // içine hapsolmasını engellemek için başlangıç noktasını yeni yönde "çok çok az" ileri itiyoruz (0.01f)
                         currentPos = hit.point + (newDirection.normalized * 0.01f);
                         currentDir = newDirection.normalized;
                         bounces++;
                     }
-                    else
-                    {
-                        // Işın hedefe ulaştı, çeliğe çarptı veya TNT patlattı, devam etmeyecek.
-                        break;
-                    }
+                    else break;
                 }
-                else
-                {
-                    // ILaserInteractable olmayan düz bir objeye çarptı, dur.
-                    break;
-                }
+                else break;
             }
-            else
-            {
-                // Işın hiçbir şeye çarpmadı (Boşluğa gitti)
-                points.Add(currentPos + currentDir * maxDistance);
-                break;
-            }
+            else break;
         }
 
-        // Kapatılan collider'ları geri açıyoruz
         if (ignoreCollider != null) ignoreCollider.enabled = true;
         if (myCollider != null) myCollider.enabled = true;
-
-        lineRenderer.positionCount = points.Count;
-        lineRenderer.SetPositions(points.ToArray());
     }
 }
