@@ -43,13 +43,13 @@
       "x": 0,
       "y": 4,
       "type": "Mirror_NE_SW",
-      "rotation": 45
+      "rotation": -45
     },
     {
-      "x": 5,
+      "x": 4,
       "y": 4,
       "type": "Mirror_SW_NE",
-      "rotation": -45
+      "rotation": 45
     },
     {
       "x": 1,
