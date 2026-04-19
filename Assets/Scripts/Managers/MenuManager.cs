@@ -36,7 +36,15 @@ namespace VectorFlow.Managers
 
         private IEnumerator SplashRoutine()
         {
-            // Logolu loading ekranı efekti için 2 saniye bekle
+            // Eğer oyundan dönüyorsak Splash ve Main Menu'yü atlayıp direkt Level Select'e git
+            if (UIManager.goToLevelSelect)
+            {
+                UIManager.goToLevelSelect = false; // Flag'i sıfırla
+                ShowLevelSelect();
+                yield break;
+            }
+
+            // İlk açılışta logolu loading ekranı efekti için 2 saniye bekle
             yield return new WaitForSeconds(2f);
             ShowMainMenu();
         }

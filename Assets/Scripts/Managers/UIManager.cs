@@ -18,6 +18,8 @@ namespace VectorFlow.Managers
         public GameObject[] stars; // 3 yıldız görseli
         
         public GameObject gameOverPanel;
+        
+        public static bool goToLevelSelect = false;
 
         [Header("Popups")]
         public GameObject floatingTextPrefab;
@@ -123,7 +125,10 @@ namespace VectorFlow.Managers
 
         public void OnClickMainMenu()
         {
+            Time.timeScale = 1f; 
+            goToLevelSelect = true; // Menü açıldığında direkt Level Select'e gitsin
             SceneManager.LoadScene("MenuScene");
+            Debug.Log("[UIManager] Oyundan çıkıldı, tüm veriler temizlendi.");
         }
     }
 }
