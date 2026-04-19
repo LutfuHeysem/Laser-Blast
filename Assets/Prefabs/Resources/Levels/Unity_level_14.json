@@ -8,37 +8,37 @@
   "blocks": [
     {
       "x": 1,
-      "y": 10,
+      "y": 3,
       "type": "Goal",
       "rotation": 0
     },
     {
       "x": 1,
-      "y": 5,
+      "y": 8,
       "type": "Mirror_NE_SW",
       "rotation": 0
     },
     {
       "x": 4,
-      "y": 5,
+      "y": 8,
       "type": "Prism",
       "rotation": 0
     },
     {
       "x": 7,
-      "y": 5,
+      "y": 8,
       "type": "SteelWall",
       "rotation": 0
     },
     {
       "x": 4,
-      "y": 0,
+      "y": 13,
       "type": "Arrow",
       "rotation": 0
     },
     {
       "x": 7,
-      "y": 0,
+      "y": 13,
       "type": "Arrow",
       "rotation": 0
     }

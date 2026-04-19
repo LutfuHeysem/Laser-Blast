@@ -8,55 +8,55 @@
   "blocks": [
     {
       "x": 3,
-      "y": 6,
+      "y": 7,
       "type": "SteelWall",
       "rotation": 0
     },
     {
       "x": 5,
-      "y": 4,
+      "y": 9,
       "type": "Prism",
       "rotation": 0
     },
     {
       "x": 7,
-      "y": 4,
+      "y": 9,
       "type": "Arrow",
       "rotation": -90
     },
     {
       "x": 8,
-      "y": 4,
+      "y": 9,
       "type": "Mirror_NE_SW",
       "rotation": 0
     },
     {
       "x": 3,
-      "y": 2,
+      "y": 11,
       "type": "Mirror_SW_NE",
       "rotation": 0
     },
     {
       "x": 6,
-      "y": 2,
+      "y": 11,
       "type": "SteelWall",
       "rotation": 0
     },
     {
       "x": 3,
-      "y": 0,
+      "y": 13,
       "type": "Arrow",
       "rotation": 0
     },
     {
       "x": 5,
-      "y": 0,
+      "y": 13,
       "type": "Arrow",
       "rotation": 0
     },
     {
       "x": 8,
-      "y": 0,
+      "y": 13,
       "type": "Goal",
       "rotation": 0
     }

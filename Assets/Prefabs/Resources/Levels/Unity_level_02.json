@@ -8,19 +8,19 @@
   "blocks": [
     {
       "x": 2,
-      "y": 6,
+      "y": 7,
       "type": "Mirror_SW_NE",
       "rotation": 0
     },
     {
       "x": 7,
-      "y": 6,
+      "y": 7,
       "type": "Goal",
       "rotation": 0
     },
     {
       "x": 2,
-      "y": 0,
+      "y": 13,
       "type": "Arrow",
       "rotation": 0
     }

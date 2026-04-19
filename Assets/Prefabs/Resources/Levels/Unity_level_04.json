@@ -8,31 +8,31 @@
   "blocks": [
     {
       "x": 4,
-      "y": 10,
+      "y": 3,
       "type": "Goal",
       "rotation": 0
     },
     {
       "x": 4,
-      "y": 6,
+      "y": 7,
       "type": "Glass",
       "rotation": 0
     },
     {
       "x": 4,
-      "y": 3,
+      "y": 10,
       "type": "Glass",
       "rotation": 0
     },
     {
       "x": 4,
-      "y": 0,
+      "y": 13,
       "type": "Arrow",
       "rotation": 0
     },
     {
       "x": 7,
-      "y": 0,
+      "y": 13,
       "type": "Arrow",
       "rotation": 0
     }
