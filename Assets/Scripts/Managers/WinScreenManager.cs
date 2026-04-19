@@ -95,6 +95,7 @@ public class WinScreenManager : MonoBehaviour
     public void OnMainMenuClicked()
     {
         Time.timeScale = 1f;
+        VectorFlow.Managers.UIManager.goToLevelSelect = true; // Win ekranından dönerken de direkt Level Select'e git
         SceneManager.LoadScene("MenuScene");
     }
 }
