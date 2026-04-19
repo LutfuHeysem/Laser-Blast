@@ -86,10 +86,34 @@ public class WinScreenManager : MonoBehaviour
         winPanel.transform.localScale = Vector3.one;
     }
 
-    public void OnRetryClicked()
+    public void OnNextLevelClicked()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1f; // Zamanı normale döndür
+
+        // 1. Mevcut seviye numarasını al (PlayerPrefs üzerinden yönettiğini varsayıyoruz)
+        int currentLevel = PlayerPrefs.GetInt("SelectedLevel", 1);
+        int nextLevel = currentLevel + 1;
+
+        // 2. Maksimum seviye kontrolü (Örn: Toplam 20 bölümün varsa)
+        // Buradaki 20 sayısını senin JSON'daki toplam bölüm sayınla değiştirebilirsin
+        int maxLevels = 20; 
+
+        if (nextLevel <= maxLevels)
+        {
+            // 3. Bir sonraki seviyeyi kaydet
+            PlayerPrefs.SetInt("SelectedLevel", nextLevel);
+            PlayerPrefs.Save();
+
+            // 4. AYNI SAHNEYİ YENİDEN YÜKLE
+            // Sahne ismin neyse ("LevelScene" gibi) onu yazıyoruz
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            // Eğer tüm leveller bittiyse Ana Menüye dön
+            Debug.Log("Tüm seviyeler tamamlandı!");
+            SceneManager.LoadScene("MenuScene"); 
+        }
     }
 
     public void OnMainMenuClicked()

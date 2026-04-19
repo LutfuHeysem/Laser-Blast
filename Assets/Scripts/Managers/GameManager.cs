@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+
 namespace VectorFlow.Managers
 {
     public enum GameState
@@ -51,7 +52,14 @@ namespace VectorFlow.Managers
             if (newState == GameState.GameOver)
             {
                 Debug.Log("[GameManager] GAME OVER! Enerji bitti.");
-                if (UIManager.Instance != null) UIManager.Instance.ShowGameOver();
+                // if (UIManager.Instance != null) UIManager.Instance.ShowGameOver();
+
+                if (LoseScreenManager.Instance != null) 
+                    {
+                        int finalScore = ScoreManager.Instance.CurrentScore;
+                        Debug.Log($"[GameManager]ADSLKFNASLDFKJANSDF State changed to: {CurrentState}");
+                        LoseScreenManager.Instance.ShowLoseScreen(finalScore);
+                    }
             }
             else if (newState == GameState.LevelComplete)
             {
