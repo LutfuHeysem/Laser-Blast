@@ -18,6 +18,11 @@ namespace VectorFlow.Gameplay.Blocks
 
             if (hit.collider != null)
             {
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.audioPlay("mirror");
+                }
+
                 if (VectorFlow.Managers.ScoreManager.Instance != null)
                 {
                     VectorFlow.Managers.ScoreManager.Instance.AddScore(10); // Aynadan sektirme bonusu

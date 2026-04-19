@@ -57,6 +57,10 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             }
 
             isActivated = true;
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.audioPlay("laser");
+            }
 
             // Ateşleme başladığında animasyonu oynat
             if (animator != null) animator.Play("Laser_shoot");

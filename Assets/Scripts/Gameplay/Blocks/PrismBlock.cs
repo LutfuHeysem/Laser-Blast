@@ -40,7 +40,10 @@ namespace VectorFlow.Gameplay.Blocks
         private System.Collections.IEnumerator ProcessLaserHits(Vector2 hitPoint, int inheritedBounces)
         {
             isProcessing = true;
-
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.audioPlay("split");
+            }
             foreach (Transform exitPoint in exitPoints)
             {
                 //geldiği yöne en yakın olan çıkışı sayma
