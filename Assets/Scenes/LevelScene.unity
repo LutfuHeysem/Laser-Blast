@@ -861,6 +861,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RetryButton
       objectReference: {fileID: 0}
+    - target: {fileID: 4524948814515310055, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5929976600415538989, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
       propertyPath: m_SizeDelta.x
       value: 500
@@ -872,6 +876,10 @@ PrefabInstance:
     - target: {fileID: 7935185621794895705, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -400
+      objectReference: {fileID: 0}
+    - target: {fileID: 7948004883132995547, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8261409545179158955, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
       propertyPath: m_Type
@@ -911,6 +919,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8326093591006287568, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8326093591006287568, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8326093591006287568, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8326093591006287568, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
+      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8326093591006287568, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
