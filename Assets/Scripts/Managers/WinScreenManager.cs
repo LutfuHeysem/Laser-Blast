@@ -96,7 +96,7 @@ public class WinScreenManager : MonoBehaviour
 
         // 2. Maksimum seviye kontrolü (Örn: Toplam 20 bölümün varsa)
         // Buradaki 20 sayısını senin JSON'daki toplam bölüm sayınla değiştirebilirsin
-        int maxLevels = 20; 
+        int maxLevels = 19;
 
         if (nextLevel <= maxLevels)
         {

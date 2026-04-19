@@ -3,12 +3,47 @@
   "cols": 9,
   "rows": 13,
   "blocks": [
-    { "x": 0, "y": 0, "type": "Arrow", "rotation": -90 },
-    { "x": 0, "y": 1, "type": "Arrow", "rotation": -90 },
-    { "x": 0, "y": 2, "type": "Arrow", "rotation": -90 },
-    { "x": 0, "y": 3, "type": "Arrow", "rotation": -90 },
-    { "x": 0, "y": 4, "type": "Arrow", "rotation": -90 },
-    { "x": 0, "y": 5, "type": "Arrow", "rotation": -90 },
-    { "x": 1, "y": 6, "type": "Goal", "rotation": 0 }
+    {
+      "x": 1,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 180
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "type": "Goal",
+      "rotation": 0
+    }
   ]
 }

@@ -597,22 +597,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121704289}
   m_CullTransparentMesh: 1
---- !u!1 &218847016 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3821215717121063553, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
-  m_PrefabInstance: {fileID: 66369824}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &379406091 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1306284803393263613, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
-  m_PrefabInstance: {fileID: 66369824}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &206992228
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,6 +747,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28ecb6818e803644d8a5082de552fdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!1 &218847016 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3821215717121063553, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
+  m_PrefabInstance: {fileID: 66369824}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &379406091 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1306284803393263613, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
+  m_PrefabInstance: {fileID: 66369824}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &414714368
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,7 +1256,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VectorFlow.Managers.ScoreManager
   floatingTextPrefab: {fileID: 3981518381640604006, guid: 7c9111806cc744d1ca1c002748782dca, type: 3}
-  floatingTextPrefab: {fileID: 0}
 --- !u!82 &1144914128
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1426,7 +1425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3665044579096441103, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3852938295083688716, guid: ac0402f44b6d74e0796374d208721b6d, type: 3}
       propertyPath: gameplayUI
