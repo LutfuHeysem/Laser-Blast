@@ -1891,7 +1891,7 @@ MonoBehaviour:
   Explosion: {fileID: 8300000, guid: 8401456349c492a489ed90469e317e43, type: 3}
   HitWall: {fileID: 8300000, guid: 747a7f41be50efc488da3eaaee9bae2f, type: 3}
   win: {fileID: 8300000, guid: c48a972d3d024c2408a3331750786a29, type: 3}
-  lose: {fileID: 0}
+  lose: {fileID: 8300000, guid: a713587294790164fa5b40fee391b496, type: 3}
   volume: 0.7
 --- !u!82 &1144914130
 AudioSource:

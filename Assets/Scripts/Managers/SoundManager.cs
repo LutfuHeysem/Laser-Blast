@@ -93,6 +93,22 @@ public class SoundManager : MonoBehaviour
         audioQueue.Enqueue(audio);
     }
 
+    public void StopMusic()
+    {
+        if (musicSource != null && musicSource.isPlaying)
+        {
+            musicSource.Stop();
+        }
+    }
+
+    public void ResumeMusic()
+    {
+        if (musicSource != null && !musicSource.isPlaying)
+        {
+            musicSource.Play();
+        }
+    }
+
     private void ProcessSound(string audio)
     {
         // Sadece audioSource'un dolu olup olmadığını kontrol etmemiz yeterli
