@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -19,6 +20,9 @@ public class SoundManager : MonoBehaviour
 
     [Range(0, 1)] public float volume = 0.7f;
 
+    // Ses stringlerini tutacağımız kuyruk (Queue)
+    private Queue<string> audioQueue = new Queue<string>();
+
     // Obje sahneye yüklendiğinde Instance'ı ayarlıyoruz
     void Awake()
     {
@@ -37,7 +41,24 @@ public class SoundManager : MonoBehaviour
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
     }
 
+    void Update()
+    {
+        // Kuyrukta işlenecek ses varsa ve sürekli kontrol ediyorsak:
+        if (audioQueue.Count > 0)
+        {
+            // Kuyruktaki ilk elemanı al ve kuyruktan çıkar
+            string nextAudio = audioQueue.Dequeue();
+            ProcessSound(nextAudio);
+        }
+    }
+
     public void audioPlay(string audio)
+    {
+        // Gelen isteği doğrudan kuyruğa atıyoruz
+        audioQueue.Enqueue(audio);
+    }
+
+    private void ProcessSound(string audio)
     {
         // Sadece audioSource'un dolu olup olmadığını kontrol etmemiz yeterli
         if (audioSource != null)
@@ -54,7 +75,7 @@ public class SoundManager : MonoBehaviour
                     if (MirrorLaser != null) audioSource.PlayOneShot(MirrorLaser, volume);
                     break;
                 case "split":
-                    if(SplitLaser != null) audioSource.PlayOneShot(SplitLaser, volume);
+                    if (SplitLaser != null) audioSource.PlayOneShot(SplitLaser, volume);
                     break;
                 case "explode":
                     if (Explosion != null) audioSource.PlayOneShot(Explosion, volume);
