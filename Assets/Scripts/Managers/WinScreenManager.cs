@@ -57,6 +57,12 @@ public class WinScreenManager : MonoBehaviour
     // --- ANİMASYON FONKSİYONU ---
     private IEnumerator AnimatePopup()
     {
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.audioPlay("win");
+        }
+
         // 1. Paneli aç ama boyutunu (Scale) 0 yap (Görünmez olsun)
         winPanel.transform.localScale = Vector3.zero;
         winPanel.SetActive(true);
@@ -84,6 +90,8 @@ public class WinScreenManager : MonoBehaviour
 
         // Animasyon bitince boyutun tam 1 (orijinal boyut) olduğundan emin ol
         winPanel.transform.localScale = Vector3.one;
+
+        
     }
 
     public void OnNextLevelClicked()
