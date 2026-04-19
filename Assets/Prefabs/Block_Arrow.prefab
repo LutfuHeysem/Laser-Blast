@@ -191,7 +191,7 @@ MonoBehaviour:
   spriteDirection: 1
   maxDistance: 50
   maxBounces: 50
-  laserSpeed: 2
+  laserSpeed: 10
   isActivated: 0
   startingPoint: {fileID: 1935747788795347668}
   currentBounces: 0
