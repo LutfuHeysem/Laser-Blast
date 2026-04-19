@@ -108,7 +108,7 @@ namespace VectorFlow.Managers
                 // 2. GameManager'ı enerjisiyle başlat
                 if (VectorFlow.Managers.GameManager.Instance != null)
                 {
-                    VectorFlow.Managers.GameManager.Instance.InitializeGame(data.startingEnergy);
+                    VectorFlow.Managers.GameManager.Instance.InitializeGame(data.energy);
                 }
 
                 // 3. ScoreManager'ı sıfırla
