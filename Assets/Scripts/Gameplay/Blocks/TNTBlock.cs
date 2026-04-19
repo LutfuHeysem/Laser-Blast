@@ -11,6 +11,10 @@ namespace VectorFlow.Gameplay.Blocks
         public bool OnLaserHit(Vector2 hitPoint, Vector2 incomingDirection, LaserEmitter laserEmitter, out Vector2 outgoingDirection)
         {
             outgoingDirection = Vector2.zero;
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.audioPlay("explode");
+            }
             Explode();
             return false; 
         }
