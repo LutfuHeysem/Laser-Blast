@@ -28,6 +28,8 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
 
     // Animasyon kontrolcüsü
     private Animator animator;
+    private bool firedByPlayer = false;
+    private bool wasHitByLaser = false;
 
     void Start()
     {
@@ -56,14 +58,15 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
                 VectorFlow.Managers.ScoreManager.Instance.ResetCombo();
             }
 
+            firedByPlayer = true; // Oyuncu tarafından ateşlendi
             isActivated = true;
             if (SoundManager.Instance != null)
             {
                 SoundManager.Instance.audioPlay("laser");
             }
 
-            // Ateşleme başladığında animasyonu oynat
-            if (animator != null) animator.Play("Laser_shoot");
+            // Oyuncu basınca ateşleme animasyonu oynamasın
+            // if (animator != null) animator.Play("Laser_shoot");
 
             if (laserCoroutine != null) StopCoroutine(laserCoroutine);
             laserCoroutine = StartCoroutine(AnimateLaser());
@@ -77,6 +80,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         // Eğer başka bir lazer bize çarparsa ve biz henüz ateşlenmemişsek, zincirleme ateş (chain) başlasın!
         if (!isActivated)
         {
+            wasHitByLaser = true; // Başka bir lazer tarafından tetiklendi
             if (SoundManager.Instance != null)
             {
                 SoundManager.Instance.audioPlay("laser");
@@ -84,14 +88,13 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             // Zincirleme ateşleme olduğu için komboyu arttır!
             if (VectorFlow.Managers.ScoreManager.Instance != null)
             {
-                // Eğer LaserEmitter içinde o an çarpılan noktanın Vector2/Vector3 verisi varsa (örn: hitPoint), transform.position yerine onu yazman çok daha şık olur!
                 VectorFlow.Managers.ScoreManager.Instance.IncrementCombo(transform.position);
                 VectorFlow.Managers.ScoreManager.Instance.AddScore(100, transform.position);
             }
 
             isActivated = true;
 
-            // Zincirleme ateşleme başladığında da animasyonu oynat
+            // Zincirleme ateşleme başladığında normal animasyon oynasın
             if (animator != null) animator.Play("Laser_shoot");
 
             if (laserCoroutine != null) StopCoroutine(laserCoroutine);
@@ -242,10 +245,7 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         if (ignoreCollider != null) ignoreCollider.enabled = true;
         if (myCollider != null) myCollider.enabled = true;
 
-        // Lazer hedefe ulaştıktan sonra çizgilerin ekranda kalma süresi
         yield return new WaitForSeconds(0.1f);
-
-        // Lazer çizgilerini sahneden sil
         ClearLaser();
 
         if (VectorFlow.Managers.GameManager.Instance != null)
@@ -253,11 +253,27 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             VectorFlow.Managers.GameManager.Instance.UnregisterActiveLaser(this);
         }
 
-        // Lazer çizimi silindikten sonra, silahın kendisini yok etmeden önce 1.2 saniye bekle
-        yield return new WaitForSeconds(1.2f);
-
-        // Süre dolunca silahı sahneden tamamen sil
-        Destroy(gameObject);
+        if (wasHitByLaser)
+        {
+            // Lazer çarptıysa patlayıp yok olsun
+            if (animator != null) animator.Play("Prism_H");
+            yield return new WaitForSeconds(1.2f);
+            Destroy(gameObject);
+        }
+        else if (firedByPlayer)
+        {
+            // Oyuncu bastıysa çok daha saydamlaş (Alpha: 0.15) ve kal
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                Color c = sr.color;
+                c.a = 0.60f; 
+                sr.color = c;
+            }
+            // Collider'ı kapatıyoruz ki artık etkileşime girmesin
+            Collider2D coll = GetComponent<Collider2D>();
+            if (coll != null) coll.enabled = false;
+        }
     }
 
     private GameObject CreateSpriteObject(string objName, Sprite sprite, Vector3 pos, Vector3 dir, bool isBody)
