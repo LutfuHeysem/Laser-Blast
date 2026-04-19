@@ -25,7 +25,7 @@ namespace VectorFlow.Gameplay.Blocks
 
                 if (VectorFlow.Managers.ScoreManager.Instance != null)
                 {
-                    VectorFlow.Managers.ScoreManager.Instance.AddScore(10); // Aynadan sektirme bonusu
+                    VectorFlow.Managers.ScoreManager.Instance.AddScore(10, transform.position);
                 }
 
                 // 2. Snap the physical hit normal so Unity's corner-collision errors are erased

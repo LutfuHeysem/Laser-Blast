@@ -80,9 +80,9 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
             // Zincirleme ateşleme olduğu için komboyu arttır!
             if (VectorFlow.Managers.ScoreManager.Instance != null)
             {
-                VectorFlow.Managers.ScoreManager.Instance.IncrementCombo();
-                // Zincirleme tetiklendiğinde ufak bir puan
-                VectorFlow.Managers.ScoreManager.Instance.AddScore(50);
+                // Eğer LaserEmitter içinde o an çarpılan noktanın Vector2/Vector3 verisi varsa (örn: hitPoint), transform.position yerine onu yazman çok daha şık olur!
+                VectorFlow.Managers.ScoreManager.Instance.IncrementCombo(transform.position);
+                VectorFlow.Managers.ScoreManager.Instance.AddScore(100, transform.position);
             }
 
             isActivated = true;

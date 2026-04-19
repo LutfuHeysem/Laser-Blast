@@ -25,7 +25,7 @@ namespace VectorFlow.Gameplay.Blocks
             
             if (VectorFlow.Managers.ScoreManager.Instance != null)
             {
-                VectorFlow.Managers.ScoreManager.Instance.AddScore(150); // TNT Patlama Puanı
+                VectorFlow.Managers.ScoreManager.Instance.AddScore(150, transform.position);// TNT Patlama Puanı
             }
 
             foreach (var hitCollider in hitColliders)
@@ -42,7 +42,7 @@ namespace VectorFlow.Gameplay.Blocks
                 {
                     if (VectorFlow.Managers.ScoreManager.Instance != null && hitCollider.GetComponent<TNTBlock>() == null)
                     {
-                        VectorFlow.Managers.ScoreManager.Instance.AddScore(50); // Etraftaki objeleri yok etme bonusu
+                        VectorFlow.Managers.ScoreManager.Instance.AddScore(50, transform.position);
                     }
                     Destroy(hitCollider.gameObject);
                 }

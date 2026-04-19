@@ -5,7 +5,7 @@ namespace VectorFlow.Gameplay.Blocks
     [RequireComponent(typeof(BoxCollider2D))]
     public class GlassBlock : MonoBehaviour, ILaserInteractable
     {
-        // public SoundManager sm; satýrýný KALDIRDIK.
+        // public SoundManager sm; satï¿½rï¿½nï¿½ KALDIRDIK.
 
         public bool OnLaserHit(Vector2 hitPoint, Vector2 incomingDirection, LaserEmitter laserEmitter, out Vector2 outgoingDirection)
         {
@@ -13,11 +13,11 @@ namespace VectorFlow.Gameplay.Blocks
 
             if (VectorFlow.Managers.ScoreManager.Instance != null)
             {
-                VectorFlow.Managers.ScoreManager.Instance.AddScore(100);
+                VectorFlow.Managers.ScoreManager.Instance.AddScore(100, transform.position);
             }
 
-            // SoundManager'a Singleton (Instance) üzerinden direkt eriþiyoruz.
-            // Hata almamak için sahnede SoundManager olduðundan emin olmak adýna null kontrolü yapmak iyi bir pratiktir.
+            // SoundManager'a Singleton (Instance) ï¿½zerinden direkt eriï¿½iyoruz.
+            // Hata almamak iï¿½in sahnede SoundManager olduï¿½undan emin olmak adï¿½na null kontrolï¿½ yapmak iyi bir pratiktir.
             if (SoundManager.Instance != null)
             {
                 SoundManager.Instance.audioPlay("break");
