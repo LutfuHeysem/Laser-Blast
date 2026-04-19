@@ -10,7 +10,7 @@
       "x": 1,
       "y": 10,
       "type": "Mirror_SW_NE",
-      "rotation": 0
+      "rotation": 135
     },
     {
       "x": 6,
@@ -22,7 +22,7 @@
       "x": 8,
       "y": 10,
       "type": "Mirror_NE_SW",
-      "rotation": 0
+      "rotation": 45
     },
     {
       "x": 8,

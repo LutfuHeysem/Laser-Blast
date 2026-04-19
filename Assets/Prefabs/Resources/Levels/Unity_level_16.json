@@ -13,16 +13,16 @@
       "rotation": 0
     },
     {
-      "x": 2,
+      "x": 0,
       "y": 6,
       "type": "Mirror_NE_SW",
-      "rotation": 0
+      "rotation": 45
     },
     {
       "x": 5,
       "y": 6,
       "type": "Mirror_NE_SW",
-      "rotation": 0
+      "rotation": 45
     },
     {
       "x": 5,
@@ -34,7 +34,19 @@
       "x": 2,
       "y": 11,
       "type": "Mirror_SW_NE",
-      "rotation": 0
+      "rotation":135
+    },
+     {
+      "x": 0,
+      "y": 2,
+      "type": "Mirror_SW_NE",
+      "rotation":135
+    },
+    {
+      "x": 2,
+      "y": 11,
+      "type": "Mirror_SW_NE",
+      "rotation":135
     },
     {
       "x": 5,

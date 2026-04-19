@@ -22,13 +22,13 @@
       "x": 3,
       "y": 9,
       "type": "Mirror_NE_SW",
-      "rotation": 0
+      "rotation": 45
     },
     {
       "x": 6,
       "y": 9,
       "type": "Mirror_NE_SW",
-      "rotation": 0
+      "rotation": 45
     },
     {
       "x": 2,
