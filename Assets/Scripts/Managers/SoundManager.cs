@@ -9,6 +9,10 @@ public class SoundManager : MonoBehaviour
     [Header("Ses Ayarları")]
     public AudioSource audioSource;
 
+    [Header("Müzik Ayarları")]
+    public AudioSource musicSource; // Müzik için ayrı kanal
+    public AudioClip backgroundMusic;
+
     public AudioClip shootSound;
     public AudioClip breakGlass;
     public AudioClip MirrorLaser;
@@ -26,19 +30,50 @@ public class SoundManager : MonoBehaviour
     // Obje sahneye yüklendiğinde Instance'ı ayarlıyoruz
     void Awake()
     {
+        // Singleton Kontrolü
         if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject);
+            // Eğer bu script tek başına bir objeyse objeyi yok et, 
+            // ama üzerinde başka önemli scriptler varsa sadece bu scripti yok et.
+            if (GetComponents<Component>().Length <= 3) 
+                Destroy(gameObject);
+            else 
+                Destroy(this);
+                
+            return;
         }
-        else
-        {
-            Instance = this;
-        }
+        
+        Instance = this;
+
+        // Sahne geçişlerinde müzik kesilmesin diye kök dizine çıkar ve koru
+        if (transform.parent != null) transform.SetParent(null);
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        // Eğer Inspector'dan atanmadıysa otomatik bulmaya çalış
+        AudioSource[] sources = GetComponents<AudioSource>();
+        if (sources.Length >= 2)
+        {
+            if (audioSource == null) audioSource = sources[0];
+            if (musicSource == null) musicSource = sources[1];
+        }
+        else if (sources.Length == 1)
+        {
+            if (audioSource == null) audioSource = sources[0];
+        }
+        
+        // Müziği başlat (Eğer atanmışsa ve şu an o parça çalmıyorsa)
+        if (musicSource != null && backgroundMusic != null)
+        {
+            if (musicSource.clip != backgroundMusic)
+            {
+                musicSource.clip = backgroundMusic;
+                musicSource.loop = true;
+                musicSource.Play();
+            }
+        }
     }
 
     void Update()
@@ -56,6 +91,22 @@ public class SoundManager : MonoBehaviour
     {
         // Gelen isteği doğrudan kuyruğa atıyoruz
         audioQueue.Enqueue(audio);
+    }
+
+    public void StopMusic()
+    {
+        if (musicSource != null && musicSource.isPlaying)
+        {
+            musicSource.Stop();
+        }
+    }
+
+    public void ResumeMusic()
+    {
+        if (musicSource != null && !musicSource.isPlaying)
+        {
+            musicSource.Play();
+        }
     }
 
     private void ProcessSound(string audio)

@@ -20,7 +20,7 @@ namespace VectorFlow.Data
         public string levelName;
         public int cols;
         public int rows;
-        public int startingEnergy = 5;
+        public int energy = 5;
         public List<BlockEntry> blocks;
 
         // GridManager'ın çağırdığı, "Bu x ve y'de ne var?" sorusuna cevap veren fonksiyon

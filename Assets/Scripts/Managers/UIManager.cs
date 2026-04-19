@@ -74,9 +74,12 @@ namespace VectorFlow.Managers
                     if (stars[i] != null)
                     {
                         stars[i].SetActive(i < starCount);
-                    }
                 }
+
+                // Kazanınca win sesi çalsın
+                if (SoundManager.Instance != null) SoundManager.Instance.audioPlay("win");
             }
+        }
         }
 
         public void ShowGameOver()
@@ -84,6 +87,13 @@ namespace VectorFlow.Managers
             if (gameOverPanel != null)
             {
                 gameOverPanel.SetActive(true);
+
+                // Müzik dursun ve lose sesi çalsın
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.StopMusic();
+                    SoundManager.Instance.audioPlay("lose");
+                }
             }
         }
 
@@ -100,6 +110,9 @@ namespace VectorFlow.Managers
         {
             if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
             
+            // Müziği tekrar başlat (eğer durmuşsa)
+            if (SoundManager.Instance != null) SoundManager.Instance.ResumeMusic();
+
             int current = PlayerPrefs.GetInt("SelectedLevel", 1);
             int total = LevelManager.Instance != null ? LevelManager.Instance.GetTotalLevelsCount() : 999;
             
@@ -120,6 +133,10 @@ namespace VectorFlow.Managers
         {
             if (gameOverPanel != null) gameOverPanel.SetActive(false);
             if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
+            
+            // Müziği tekrar başlat
+            if (SoundManager.Instance != null) SoundManager.Instance.ResumeMusic();
+
             SceneManager.LoadScene("LevelScene");
         }
 
@@ -127,6 +144,10 @@ namespace VectorFlow.Managers
         {
             Time.timeScale = 1f; 
             goToLevelSelect = true; // Menü açıldığında direkt Level Select'e gitsin
+            
+            // Müziği tekrar başlat
+            if (SoundManager.Instance != null) SoundManager.Instance.ResumeMusic();
+
             SceneManager.LoadScene("MenuScene");
             Debug.Log("[UIManager] Oyundan çıkıldı, tüm veriler temizlendi.");
         }

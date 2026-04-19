@@ -8,6 +8,9 @@ namespace VectorFlow.Managers
     {
         public static MenuManager Instance { get; private set; }
 
+        [Header("Master Container")]
+        public GameObject levelSelectUpperMenu; // Tüm panellerin ve EXIT butonunun içinde olduğu ana obje
+
         [Header("Menu Panels")]
         public GameObject splashScreenPanel;
         public GameObject mainMenuPanel;
@@ -21,29 +24,30 @@ namespace VectorFlow.Managers
 
         private void Awake()
         {
-            if (Instance == null) Instance = this;
-            else Destroy(this);
+            // Sahne her açıldığında bu sahnede bulunan MenuManager aktif olur.
+            Instance = this;
         }
 
         private void Start()
         {
             // Başlangıçta tüm menüleri kapat, sadece Splash'ı aç
             CloseAllPanels();
-            if (splashScreenPanel != null) splashScreenPanel.SetActive(true);
-
-            StartCoroutine(SplashRoutine());
+            
+            // Eğer oyundan (LevelScene) dönüyorsak Splash'ı atla
+            if (UIManager.goToLevelSelect)
+            {
+                UIManager.goToLevelSelect = false;
+                ShowLevelSelect();
+            }
+            else
+            {
+                if (splashScreenPanel != null) splashScreenPanel.SetActive(true);
+                StartCoroutine(SplashRoutine());
+            }
         }
 
         private IEnumerator SplashRoutine()
         {
-            // Eğer oyundan dönüyorsak Splash ve Main Menu'yü atlayıp direkt Level Select'e git
-            if (UIManager.goToLevelSelect)
-            {
-                UIManager.goToLevelSelect = false; // Flag'i sıfırla
-                ShowLevelSelect();
-                yield break;
-            }
-
             // İlk açılışta logolu loading ekranı efekti için 2 saniye bekle
             yield return new WaitForSeconds(2f);
             ShowMainMenu();
@@ -51,6 +55,9 @@ namespace VectorFlow.Managers
 
         private void CloseAllPanels()
         {
+            // Ana kapsayıcı açık kalmalı ki içindeki butonlar (EXIT gibi) çalışmaya devam etsin
+            if (levelSelectUpperMenu != null) levelSelectUpperMenu.SetActive(true);
+
             if (splashScreenPanel != null) splashScreenPanel.SetActive(false);
             if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
             if (levelSelectPanel != null) levelSelectPanel.SetActive(false);
@@ -74,18 +81,29 @@ namespace VectorFlow.Managers
 
         private void PopulateLevelSelect()
         {
-            if (levelButtonPrefab == null || levelSelectContainer == null) return;
+            if (levelButtonPrefab == null || levelSelectContainer == null) 
+            {
+                Debug.LogError("[MenuManager] HATA: levelButtonPrefab veya levelSelectContainer atanmamış!");
+                return;
+            }
 
-            // Önceki butonları temizle (isteğe bağlı, ama veriler değişmiş olabileceği için temizlemek iyi)
+            // Önceki butonları temizle
             foreach (Transform child in levelSelectContainer)
             {
                 Destroy(child.gameObject);
             }
 
-            // Resources klasöründeki bölümleri bul ve sayısına göre buton üret
+            // Resources/Levels klasöründeki bölümleri bul
             TextAsset[] availableLevels = Resources.LoadAll<TextAsset>("Levels");
+            Debug.Log($"[MenuManager] Resources/Levels klasöründe {availableLevels.Length} adet bölüm bulundu.");
             
-            // Bölümleri adına göre (Level1, Level2) düzgün sırala
+            if (availableLevels.Length == 0)
+            {
+                Debug.LogWarning("[MenuManager] UYARI: Hiç bölüm bulunamadı! Klasör ismini ve dosyaları kontrol edin.");
+                return;
+            }
+
+            // Bölümleri adına göre düzgün sırala
             System.Array.Sort(availableLevels, (a, b) => 
             {
                 int numA = ExtractNumber(a.name);
@@ -94,23 +112,23 @@ namespace VectorFlow.Managers
                 return numA.CompareTo(numB);
             });
 
-            int totalLevels = availableLevels.Length;
             int unlockedLevel = SaveManager.GetUnlockedLevel();
 
-            for (int i = 1; i <= totalLevels; i++)
+            for (int i = 0; i < availableLevels.Length; i++)
             {
+                int levelNum = i + 1; // 1 tabanlı level numarası
                 GameObject newButtonObj = Instantiate(levelButtonPrefab, levelSelectContainer);
                 VectorFlow.UI.LevelButtonUI buttonUI = newButtonObj.GetComponent<VectorFlow.UI.LevelButtonUI>();
                 
                 if (buttonUI != null)
                 {
-                    bool isUnlocked = (i <= unlockedLevel);
-                    int stars = SaveManager.GetLevelStars(i);
-                    int score = SaveManager.GetLevelScore(i);
+                    bool isUnlocked = (levelNum <= unlockedLevel);
+                    int stars = SaveManager.GetLevelStars(levelNum);
+                    int score = SaveManager.GetLevelScore(levelNum);
                     
-                    buttonUI.Setup(i, isUnlocked, stars, score);
+                    buttonUI.Setup(levelNum, isUnlocked, stars, score);
 
-                    // Butona tıklama özelliğini koddan ekle
+                    // Butona tıklama özelliğini ekle
                     buttonUI.buttonComponent.onClick.AddListener(() => buttonUI.OnClickButton());
                 }
             }
@@ -138,6 +156,12 @@ namespace VectorFlow.Managers
 
             // Level sahnesini yükle
             SceneManager.LoadScene("LevelScene");
+        }
+
+        public void ExitGame()
+        {
+            Debug.Log("Oyundan çıkılıyor...");
+            Application.Quit();
         }
     }
 }

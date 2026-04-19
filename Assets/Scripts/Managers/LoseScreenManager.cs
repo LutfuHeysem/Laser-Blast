@@ -43,6 +43,11 @@ public class LoseScreenManager : MonoBehaviour
 
     private IEnumerator AnimatePopup()
     {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.audioPlay("lose");
+        }
+
         losePanel.transform.localScale = Vector3.zero;
         losePanel.SetActive(true);
 
