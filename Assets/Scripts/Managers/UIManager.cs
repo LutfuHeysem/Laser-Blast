@@ -49,12 +49,12 @@ namespace VectorFlow.Managers
             // HUD'u sürekli güncelle (ya da event bazlı da yapılabilir)
             if (GameManager.Instance != null && energyText != null)
             {
-                energyText.text = $"Energy: {GameManager.Instance.CurrentEnergy}";
+                energyText.text = $"{GameManager.Instance.CurrentEnergy}";
             }
 
             if (ScoreManager.Instance != null && scoreText != null)
             {
-                scoreText.text = $"Score: {ScoreManager.Instance.CurrentScore}";
+                scoreText.text = $"{ScoreManager.Instance.CurrentScore}";
             }
         }
 
