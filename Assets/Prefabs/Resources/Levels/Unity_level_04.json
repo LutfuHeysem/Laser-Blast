@@ -1,0 +1,40 @@
+{
+  "levelId": 4,
+  "levelName": "Cam Engel",
+  "difficulty": 2,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 4,
+      "y": 10,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 6,
+      "type": "Glass",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "type": "Glass",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

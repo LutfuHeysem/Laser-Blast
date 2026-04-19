@@ -1,0 +1,46 @@
+{
+  "levelId": 14,
+  "levelName": "Prizma Tuzağı",
+  "difficulty": 4,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 1,
+      "y": 10,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "type": "Mirror_NE_SW",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "type": "Prism",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

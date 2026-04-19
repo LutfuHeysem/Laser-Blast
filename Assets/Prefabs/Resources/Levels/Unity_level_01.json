@@ -1,0 +1,22 @@
+{
+  "levelId": 1,
+  "levelName": "İlk Sinyal",
+  "difficulty": 1,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 4,
+      "y": 10,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

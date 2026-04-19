@@ -1,0 +1,40 @@
+{
+  "levelId": 7,
+  "levelName": "Tahribat",
+  "difficulty": 4,
+  "energy": 2,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 4,
+      "y": 10,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "type": "TNT",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 4,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

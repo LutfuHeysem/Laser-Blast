@@ -1,0 +1,58 @@
+{
+  "levelId": 16,
+  "levelName": "Çift Ateş",
+  "difficulty": 5,
+  "energy": 2,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 2,
+      "y": 11,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 7,
+      "type": "Mirror_NE_SW",
+      "rotation": 0
+    },
+    {
+      "x": 5,
+      "y": 7,
+      "type": "Mirror_NE_SW",
+      "rotation": 0
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "type": "Mirror_SW_NE",
+      "rotation": 0
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "type": "TNT",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "levelId": 17,
+  "levelName": "Ters Dünya",
+  "difficulty": 5,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 3,
+      "y": 6,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "type": "Prism",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 4,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 8,
+      "y": 4,
+      "type": "Mirror_NE_SW",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "type": "Mirror_SW_NE",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 5,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 8,
+      "y": 0,
+      "type": "Goal",
+      "rotation": 0
+    }
+  ]
+}

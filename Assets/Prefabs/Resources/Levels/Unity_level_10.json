@@ -1,0 +1,46 @@
+{
+  "levelId": 10,
+  "levelName": "Sahte Yol",
+  "difficulty": 3,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 3,
+      "y": 10,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 8,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "type": "Mirror_NE_SW",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "type": "Mirror_NE_SW",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

@@ -1241,7 +1241,7 @@ MonoBehaviour:
   levelCompleteScoreText: {fileID: 1917789807}
   stars: []
   gameOverPanel: {fileID: 1289787857}
-  floatingTextPrefab: {fileID: 0}
+  floatingTextPrefab: {fileID: 3981518381640604006, guid: 7c9111806cc744d1ca1c002748782dca, type: 3}
   mainCanvas: {fileID: 414714371}
 --- !u!114 &1144914127
 MonoBehaviour:

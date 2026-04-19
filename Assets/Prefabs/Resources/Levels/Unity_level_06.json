@@ -1,0 +1,34 @@
+{
+  "levelId": 6,
+  "levelName": "Röle",
+  "difficulty": 3,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 2,
+      "y": 5,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 7,
+      "y": 5,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

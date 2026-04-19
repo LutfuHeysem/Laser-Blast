@@ -1,0 +1,52 @@
+{
+  "levelId": 8,
+  "levelName": "Büyük Zincir",
+  "difficulty": 4,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 1,
+      "y": 3,
+      "type": "Mirror_SW_NE",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "type": "Arrow",
+      "rotation": -90
+    },
+    {
+      "x": 8,
+      "y": 3,
+      "type": "Mirror_NE_SW",
+      "rotation": 0
+    },
+    {
+      "x": 8,
+      "y": 2,
+      "type": "Glass",
+      "rotation": 0
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

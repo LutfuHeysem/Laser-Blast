@@ -1,0 +1,46 @@
+{
+  "levelId": 12,
+  "levelName": "Sıralı Patlama",
+  "difficulty": 4,
+  "energy": 2,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 6,
+      "y": 10,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 4,
+      "type": "SteelWall",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "type": "Mirror_SW_NE",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 3,
+      "type": "TNT",
+      "rotation": 0
+    },
+    {
+      "x": 3,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    },
+    {
+      "x": 6,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}

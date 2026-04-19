@@ -1,0 +1,28 @@
+{
+  "levelId": 2,
+  "levelName": "Yansıma",
+  "difficulty": 1,
+  "energy": 1,
+  "cols": 9,
+  "rows": 13,
+  "blocks": [
+    {
+      "x": 2,
+      "y": 6,
+      "type": "Mirror_SW_NE",
+      "rotation": 0
+    },
+    {
+      "x": 7,
+      "y": 6,
+      "type": "Goal",
+      "rotation": 0
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "type": "Arrow",
+      "rotation": 0
+    }
+  ]
+}
