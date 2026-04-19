@@ -937,7 +937,7 @@ MonoBehaviour:
   MirrorLaser: {fileID: 8300000, guid: 06ada5590eba8d6489b36c6f3c54ff78, type: 3}
   SplitLaser: {fileID: 8300000, guid: b1b9c1f0ea1fcae439ed1a4d44ff05fd, type: 3}
   Explosion: {fileID: 8300000, guid: 8401456349c492a489ed90469e317e43, type: 3}
-  HitWall: {fileID: 8300000, guid: 747a7f41be50efc488da3eaaee9bae2f, type: 3}
+  HitWall: {fileID: 8300000, guid: d9419ba0bfac1e84a95418ac5851caf6, type: 3}
   win: {fileID: 8300000, guid: c48a972d3d024c2408a3331750786a29, type: 3}
   lose: {fileID: 0}
   volume: 0.7

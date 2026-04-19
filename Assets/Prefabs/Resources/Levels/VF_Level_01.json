@@ -1,0 +1,13 @@
+{
+  "levelId": 1,
+  "levelName": "İlk Sinyal",
+  "subtitle": "Düz git. Basit ama güzel.",
+  "cols": 9,
+  "rows": 12,
+  "energy": 1,
+  "difficulty": 1,
+  "blocks": [
+    { "x": 4, "y": 10, "type": "Goal",  "rotation": 0 },
+    { "x": 4, "y":  0, "type": "Arrow", "rotation": 0 }
+  ]
+}
