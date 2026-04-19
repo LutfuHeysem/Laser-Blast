@@ -77,6 +77,10 @@ public class LaserEmitter : MonoBehaviour, ILaserInteractable
         // Eğer başka bir lazer bize çarparsa ve biz henüz ateşlenmemişsek, zincirleme ateş (chain) başlasın!
         if (!isActivated)
         {
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.audioPlay("laser");
+            }
             // Zincirleme ateşleme olduğu için komboyu arttır!
             if (VectorFlow.Managers.ScoreManager.Instance != null)
             {
